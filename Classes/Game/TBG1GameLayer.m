@@ -37,12 +37,10 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 @implementation TBG1GameLayer {
     CCSpriteBatchNode *_sheet;
 
-    TBMovieClip *_bear;
-    TBMovieClip *_background;
-    TBMovieClip *_planet;
-    TBMovieClip *_loadBar;
-    TBMovieClip *_fire;
-    TBMovieClip *_effect;
+    CCSprite *_bgA;
+    CCSprite *_bgB;
+    CGFloat _bgScrollHeight;
+    CCSprite *_bearSprite;
 
     NSMutableArray<TBG1Stone *> *_stones;
     NSInteger _nextStone;
@@ -112,59 +110,14 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _sheet = [CCSpriteBatchNode batchNodeWithFile:@"g1_game.png"];
     if (_sheet) [self addChild:_sheet z:0];
 
-    // 2. 背景（1 clip / 3501 帧的长条滚动图，352x1002）
-    //    原版把它放在 (0,0) 锚点左下，靠帧表里的 dy 做滚动。
-    _background = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:0];
-    if ([_background loadTableNamed:@"G1_Background"]) {
-        [_background buildSpritesWithZOrder:0];
-        _background.baseX = 0;
-        _background.baseY = 0;
-        [self addChild:_background z:0];
-        [_background gotoAndPlayFrame:1];
-    }
+    // 2. 背景：bg.png 是 352x1002 的长条，两张上下拼接做无缝滚动
+    [self buildBackground];
 
-    // 3. 星球装饰（2 clip）
-    _planet = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:1];
-    if ([_planet loadTableNamed:@"G1_Planet"]) {
-        [_planet buildSpritesWithZOrder:1];
-        _planet.baseX = 0;
-        _planet.baseY = 0;
-        [self addChild:_planet z:1];
-        [_planet gotoAndPlayFrame:1];
-    }
+    // 3. 小熊：先用完整立绘 bear2.png（76x128），保证比例和朝向正确。
+    //    30-clip 的部件拼装动画留到后续版本再启用。
+    [self buildBear];
 
-    // 4. 小熊（30 clip / 182 帧，分部件拼装）
-    //    原版 anchorX=47 / anchorY=72 是整体锚点（96x128 立绘的中心偏下），
-    //    clipAnchorX/Y 全为 0/1 -> 每个部件锚点 (1,0) 即左下角，
-    //    所以 baseX/baseY 就是「小熊脚底中心」的挂点。
-    _bear = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:5];
-    if ([_bear loadTableNamed:@"G1_Bear"]) {
-        [_bear buildSpritesWithZOrder:5];
-        _bear.baseX = kBearStartX;
-        _bear.baseY = kBearY;
-        [self addChild:_bear z:5];
-        [_bear gotoAndStopName:@"start"];
-    }
-
-    // 5. 尾焰（跟着小熊）
-    _fire = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:4];
-    if ([_fire loadTableNamed:@"G1_Fire"]) {
-        [_fire buildSpritesWithZOrder:4];
-        _fire.baseVisible = NO;
-        [self addChild:_fire z:4];
-        [_fire gotoAndPlayFrame:1];
-    }
-
-    // 6. 撞击特效
-    _effect = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:6];
-    if ([_effect loadTableNamed:@"G1_Effect"]) {
-        [_effect buildSpritesWithZOrder:6];
-        _effect.baseVisible = NO;
-        [self addChild:_effect z:6];
-    }
-
-    // 7. 石头池：预创建精灵，用切换可见性复用
-    //    注意必须用 alloc/init，工厂方法返回的是 CCSprite 而不是子类
+    // 4. 石头池
     CCSpriteFrame *rockFrame = [[CCSpriteFrameCache sharedSpriteFrameCache]
                                 spriteFrameByName:@"rock1.png"];
     for (NSInteger i = 0; i < kStonePoolSize; i++) {
@@ -176,7 +129,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
         [_stones addObject:s];
     }
 
-    // 8. 分数
+    // 5. 分数
     _scoreLabel = [CCLabelTTF labelWithString:@"000" fontName:@"Helvetica-Bold" fontSize:20];
     _scoreLabel.position = CGPointMake(d.width * 0.5f, d.height - 24);
     _scoreLabel.color = [CCColor colorWithRed:1 green:0.95f blue:0.4f alpha:1];
@@ -196,23 +149,74 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     [[TBAudio sharedAudio] playBackgroundMusic:@"bgm.mp3" loop:YES];
 }
 
+#pragma mark - 背景（无缝滚动）
+
+- (void)buildBackground
+{
+    CCSpriteFrame *bgFrame = [[CCSpriteFrameCache sharedSpriteFrameCache]
+                              spriteFrameByName:@"bg.png"];
+    if (!bgFrame) return;
+
+    _bgA = [[CCSprite alloc] initWithSpriteFrame:bgFrame];
+    _bgB = [[CCSprite alloc] initWithSpriteFrame:bgFrame];
+    if (!_bgA || !_bgB) return;
+
+    CGFloat h = _bgA.contentSize.height;   // 1002
+    // 画布 480 高，背景图 1002 高，缩放让宽度铺满 320
+    CGFloat sx = self.contentSize.width / _bgA.contentSize.width;  // 320/352 ≈ 0.909
+    _bgA.scaleX = _bgA.scaleY = sx;
+    _bgB.scaleX = _bgB.scaleY = sx;
+
+    CGFloat scaledH = h * sx;              // ≈ 911
+    _bgA.anchorPoint = CGPointMake(0.5f, 1.0f);
+    _bgB.anchorPoint = CGPointMake(0.5f, 1.0f);
+    _bgA.position = CGPointMake(self.contentSize.width * 0.5f, 0);
+    _bgB.position = CGPointMake(self.contentSize.width * 0.5f, -scaledH);
+
+    _bgScrollHeight = scaledH;
+
+    [self addChild:_bgA z:-10];
+    [self addChild:_bgB z:-10];
+}
+
+- (void)updateBackground
+{
+    if (!_bgA || !_bgB) return;
+
+    CGFloat dy = _speed * 1.2f;
+    _bgA.position = CGPointMake(_bgA.position.x, _bgA.position.y - dy);
+    _bgB.position = CGPointMake(_bgB.position.x, _bgB.position.y - dy);
+
+    // 任何一张完全滚出屏幕下沿，就把它挪到另一张上方
+    if (_bgA.position.y < -_bgScrollHeight) {
+        _bgA.position = CGPointMake(_bgA.position.x, _bgB.position.y + _bgScrollHeight);
+    }
+    if (_bgB.position.y < -_bgScrollHeight) {
+        _bgB.position = CGPointMake(_bgB.position.x, _bgA.position.y + _bgScrollHeight);
+    }
+}
+
+#pragma mark - 小熊
+
+- (void)buildBear
+{
+    CCSpriteFrame *f = [[CCSpriteFrameCache sharedSpriteFrameCache]
+                        spriteFrameByName:@"bear2.png"];
+    _bearSprite = [[CCSprite alloc] initWithSpriteFrame:f];
+    if (!_bearSprite) return;
+
+    // bear2 原始 76x128，缩到 57x96（设计画布 320x480 的合理角色尺寸）
+    _bearSprite.scale = 0.75f;
+    _bearSprite.anchorPoint = CGPointMake(0.5f, 0.0f);   // 脚底中心
+    _bearSprite.position = CGPointMake(kBearStartX, kBearY);
+    [self addChild:_bearSprite z:5];
+}
+
 #pragma mark - 主循环
 
 - (void)tick:(CCTime)dt
 {
-    [_loadBar tick];
-    [_background tick];
-    [_planet tick];
-    [_bear tick];
-
-    // 尾焰跟随
-    _fire.baseX = _bear.baseX;
-    _fire.baseY = _bear.baseY - 82.0f;
-    BOOL flying = !([_bear.currentLabel isEqualToString:@"start"] ||
-                    [_bear.currentLabel isEqualToString:@"die"]);
-    _fire.baseVisible = flying;
-    [_fire tick];
-    [_effect tick];
+    [self updateBackground];
 
     if (_isGameOver) return;
 
@@ -233,39 +237,39 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 {
     if (!_isMouseDown || _bearAction != 0) return;
 
-    // 原版：把 x 按 gWidth/3 分档
+    // 把 x 按 gWidth/3 分档
     NSInteger col = (NSInteger)(_mouseX / (self.contentSize.width / 3.0f));
     col = MAX(0, MIN(2, col));
 
     if (col != _currentCol && _bearAction == 0) {
         _targetCol = col;
         _bearAction = (col > _currentCol) ? 2 : 1;
-        [_bear gotoAndPlayName:(_bearAction == 2 ? @"right" : @"left")];
     }
 }
 
 - (void)updateBear
 {
-    if (_bearAction == 0) return;
+    if (_bearAction == 0) {
+        _bearSprite.position = CGPointMake(kColX[_currentCol], kBearY);
+        return;
+    }
 
     CGFloat targetX = kColX[_targetCol];
-    CGFloat step = kColWidth * 0.5f * (_speed / kBaseSpeed) * 0.35f;
+    CGFloat step = 4.5f;
 
     if (_bearAction == 2) {
-        _bear.baseX += step;
-        if (_bear.baseX >= targetX) {
-            _bear.baseX = targetX;
+        _bearSprite.position = CGPointMake(_bearSprite.position.x + step, kBearY);
+        if (_bearSprite.position.x >= targetX) {
+            _bearSprite.position = CGPointMake(targetX, kBearY);
             _bearAction = 0;
             _currentCol = _targetCol;
-            [_bear gotoAndPlayName:@"stay"];
         }
     } else {
-        _bear.baseX -= step;
-        if (_bear.baseX <= targetX) {
-            _bear.baseX = targetX;
+        _bearSprite.position = CGPointMake(_bearSprite.position.x - step, kBearY);
+        if (_bearSprite.position.x <= targetX) {
+            _bearSprite.position = CGPointMake(targetX, kBearY);
             _bearAction = 0;
             _currentCol = _targetCol;
-            [_bear gotoAndPlayName:@"stay"];
         }
     }
 }
@@ -340,9 +344,8 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)checkHit
 {
-    // 小熊立绘 96x128，锚点 (47,72)。碰撞盒只取身体核心（不含耳朵/尾巴），
-    // 原版判定比较宽松，这里再收窄一点，避免"擦边就死"。
-    CGRect bearBox = CGRectMake(_bear.baseX - 20, kBearY - 26, 40, 52);
+    // 小熊立绘 76x128 缩放 0.75 -> 57x96，锚点脚底中心
+    CGRect bearBox = CGRectMake(_bearSprite.position.x - 20, kBearY + 10, 40, 56);
 
     for (TBG1Stone *s in _stones) {
         if (!s.visible) continue;
@@ -372,7 +375,6 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _isGameOver = YES;
 
     [[TBAudio sharedAudio] playEffect:@"gameover.wav"];
-    [_bear gotoAndPlayName:@"die"];
 
     _gameOverLabel.string = [NSString stringWithFormat:@"GAME OVER   %d", (int)_score];
 
@@ -411,7 +413,6 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     if (col != _currentCol && _bearAction == 0) {
         _targetCol = col;
         _bearAction = (col > _currentCol) ? 2 : 1;
-        [_bear gotoAndPlayName:(_bearAction == 2 ? @"right" : @"left")];
     }
 }
 
