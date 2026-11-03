@@ -121,6 +121,8 @@ targets:
       - path: Classes
       - path: Resources
         buildPhase: resources
+        excludes:
+          - "Info.plist"
       - path: vendor/cocos2d-objc/cocos2d
         excludes:
           - "Platforms/Mac/**"
