@@ -1,0 +1,164 @@
+name: TappiBear
+options:
+  minimumXcodeGenVersion: "2.35.0"
+  deploymentTarget:
+    iOS: "13.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  defaultConfig: Release
+
+settings:
+  base:
+    # ---- 架构 / SDK ----
+    ARCHS: arm64
+    ONLY_ACTIVE_ARCH: NO
+    VALID_ARCHS: arm64
+    SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    IPHONEOS_DEPLOYMENT_TARGET: "13.0"
+    SDKROOT: iphoneos
+    ENABLE_BITCODE: NO
+
+    # ---- 语言 / ARC ----
+    CLANG_ENABLE_OBJC_ARC: YES
+    CLANG_ENABLE_OBJC_WEAK: YES
+    CLANG_CXX_LANGUAGE_STANDARD: "c++14"
+    CLANG_CXX_LIBRARY: "libc++"
+    GCC_C_LANGUAGE_STANDARD: gnu11
+
+    # ---- 代码签名（CI 出未签名包）----
+    CODE_SIGNING_ALLOWED: NO
+    CODE_SIGNING_REQUIRED: NO
+    CODE_SIGN_IDENTITY: ""
+
+    # ---- 头文件搜索 ----
+    ALWAYS_SEARCH_USER_PATHS: NO
+    HEADER_SEARCH_PATHS:
+      - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d"
+      - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Platforms"
+      - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Platforms/iOS"
+      - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Support"
+      - "$(SRCROOT)/vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive"
+      - "$(SRCROOT)/vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive/minizip"
+      - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/include"
+      - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/objectivec/include"
+      - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d-ext/CCChipmunkPhysics"
+
+    # ---- 链接 ----
+    OTHER_LDFLAGS:
+      - "-ObjC"
+      - "-all_load"
+      - "-lz"
+    LIBRARY_SEARCH_PATHS:
+      - "$(inherited)"
+    FRAMEWORK_SEARCH_PATHS:
+      - "$(inherited)"
+      - "$(SRCROOT)/vendor/ios-frameworks"
+
+    # ---- 警告：旧引擎必然刷屏，只保留致命项 ----
+    CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS: NO
+    CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF: NO
+    CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS: NO
+    CLANG_WARN_DOCUMENTATION_COMMENTS: NO
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    GCC_WARN_ABOUT_RETURN_TYPE: NO
+    GCC_WARN_UNDECLARED_SELECTOR: NO
+    GCC_WARN_UNUSED_FUNCTION: NO
+    GCC_WARN_UNUSED_VARIABLE: NO
+    GCC_WARN_64_TO_32_BIT_CONVERSION: NO
+    GCC_WARN_SHADOW: NO
+    GCC_WARN_MISSING_FIELD_INITIALIZERS: NO
+    GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED: NO
+    CLANG_WARN_UNREACHABLE_CODE: NO
+    CLANG_WARN_EMPTY_BODY: NO
+    CLANG_ANALYZER_NONNULL: NO
+    CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION: NO
+    CLANG_ANALYZER_OBJC_COLLECTIONS: NO
+    CLANG_ANALYZER_OBJC_INCOMPATIBLE_POINTER_TYPES: NO
+    CLANG_ANALYZER_OBJC_MISSING_SUPER_CALL: NO
+    CLANG_ANALYZER_OBJC_PROPERTY: NO
+    CLANG_ANALYZER_OBJC_RETAIN_COUNT: NO
+    CLANG_ANALYZER_OBJC_SELF_ASSIGN: NO
+    CLANG_ANALYZER_OBJC_UNUSED_IVARS: NO
+    CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER: NO
+    CLANG_ANALYZER_SECURITY_INSECUREAPI_GETPW_GETS: NO
+    CLANG_ANALYZER_SECURITY_INSECUREAPI_MKSTEMP: NO
+    CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND: NO
+    CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY: NO
+    CLANG_ANALYZER_SECURITY_INSECUREAPI_UNCHECKEDRETURN: NO
+    CLANG_ANALYZER_SECURITY_INSECUREAPI_VFORK: NO
+    CLANG_ANALYZER_SECURITY_KEYCHAIN_API: NO
+    CLANG_ANALYZER_UNINITIALIZED: NO
+    CLANG_STATIC_ANALYZER_MODE: shallow
+    CLANG_ANALYZE_LOCALIZATION: NO
+
+    # ---- 优化 ----
+    GCC_OPTIMIZATION_LEVEL: s
+    SWIFT_OPTIMIZATION_LEVEL: "-O"
+    DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+    ENABLE_NS_ASSERTIONS: YES
+    GCC_PREPROCESSOR_DEFINITIONS:
+      - "$(inherited)"
+      - "CC_ENABLE_METAL_RENDERING=0"
+      - "CC_PHYSICS=1"
+      - "CC_CCBREADER=0"
+      - "CC_EFFECTS=0"
+      - "CC_LIGHTING=0"
+      - "CC_OBJECT_AL=0"
+      - "CC_TARGET_IPHONE=1"
+      - "COCOS2D_DEBUG=0"
+
+targets:
+  TappiBear:
+    type: application
+    platform: iOS
+    sources:
+      - path: Classes
+      - path: Resources
+        buildPhase: resources
+      - path: vendor/cocos2d-objc/cocos2d
+        excludes:
+          - "Platforms/Mac/**"
+          - "**/*.metal"
+          # CCNoARC.m 必须单独加，用 -fno-objc-arc 编译
+          - "CCNoARC.m"
+      - path: vendor/cocos2d-objc/cocos2d/CCNoARC.m
+        compilerFlags: "-fno-objc-arc"
+      - path: vendor/cocos2d-objc/cocos2d-ext/CCChipmunkPhysics
+      # 注意：不引入 cocos2d-ext/CCObjectAL 与 external/ObjectAL。
+      # 它们依赖 OpenAL + 已废弃的 AudioSessionSetProperty，
+      # 而音频已由 Classes/Audio/TBAudio（AVAudioPlayer）完整替代。
+      - path: vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive
+        excludes:
+          - "**/Example/**"
+      - path: vendor/cocos2d-objc/external/Chipmunk/src
+      - path: vendor/cocos2d-objc/external/Chipmunk/objectivec/src
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.taplay.tappibearallin1
+        PRODUCT_NAME: All_In_One
+        INFOPLIST_FILE: Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        ENABLE_PREVIEWS: NO
+        SWIFT_VERSION: "5.0"
+    dependencies:
+      - sdk: Foundation.framework
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+      - sdk: QuartzCore.framework
+      - sdk: CoreFoundation.framework
+      - sdk: OpenGLES.framework
+      - sdk: GLKit.framework
+      - sdk: AudioToolbox.framework
+      - sdk: AVFoundation.framework
+      - sdk: CoreAudio.framework
+      - sdk: CoreMotion.framework
+      - sdk: CoreText.framework
+      - sdk: ImageIO.framework
+      - sdk: libz.tbd
+      - sdk: CoreMedia.framework
+      - sdk: Metal.framework
+      - sdk: MetalKit.framework
+      - sdk: GameKit.framework
+      - sdk: Security.framework

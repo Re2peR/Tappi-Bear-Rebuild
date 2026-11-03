@@ -1,0 +1,127 @@
+name: build
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: arm64 build + simulator smoke
+    runs-on: macos-14
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          sw_vers
+
+      - name: Install XcodeGen
+        run: |
+          if ! command -v xcodegen >/dev/null 2>&1; then
+            brew install xcodegen
+          fi
+          xcodegen --version
+
+      - name: Verify vendored engine sources
+        run: |
+          set -e
+          for p in \
+            vendor/cocos2d-objc/cocos2d/CCDirector.m \
+            vendor/cocos2d-objc/cocos2d/Platforms/iOS/CCGLView.m \
+            vendor/cocos2d-objc/external/ObjectAL/ObjectAL/ObjectAL/OALSimpleAudio.m \
+            vendor/cocos2d-objc/external/Chipmunk/src/chipmunk.c ; do
+            test -f "$p" || { echo "missing $p"; exit 1; }
+          done
+          echo "engine sources OK"
+
+      - name: Generate Xcode project
+        run: xcodegen generate --spec project.yml
+
+      - name: Build for device (arm64, unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project TappiBear.xcodeproj \
+            -scheme TappiBear \
+            -configuration Release \
+            -sdk iphoneos \
+            -arch arm64 \
+            -derivedDataPath build-device \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build 2>&1 | tee build-device.log | tail -n 200
+
+      - name: Package unsigned IPA
+        run: |
+          python3 tools/make_ipa.py build-device TappiBear-arm64-unsigned.ipa
+          python3 tools/verify_ipa.py TappiBear-arm64-unsigned.ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: TappiBear-arm64-unsigned
+          path: TappiBear-arm64-unsigned.ipa
+          if-no-files-found: error
+
+      - name: Build for simulator
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project TappiBear.xcodeproj \
+            -scheme TappiBear \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath build-sim \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee build-sim.log | tail -n 200
+
+      - name: Simulator smoke test
+        run: |
+          set -e
+          APP=$(find build-sim -name "All_In_One.app" -maxdepth 6 | head -n 1)
+          echo "app = $APP"
+          test -n "$APP"
+          DEVICE=$(xcrun simctl list devices available | grep -m1 -E "iPhone 15 Pro \(" | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
+          if [ -z "$DEVICE" ]; then
+            DEVICE=$(xcrun simctl list devices available | grep -m1 "iPhone" | sed -E 's/.*\(([0-9A-F-]{36})\).*/\1/')
+          fi
+          echo "device = $DEVICE"
+          xcrun simctl boot "$DEVICE" || true
+          xcrun simctl bootstatus "$DEVICE" -b
+          xcrun simctl install "$DEVICE" "$APP"
+          xcrun simctl launch "$DEVICE" com.taplay.tappibearallin1 > launch.txt 2>&1 || true
+          cat launch.txt
+          sleep 12
+          xcrun simctl io "$DEVICE" screenshot sim-shot.png || true
+          xcrun simctl spawn "$DEVICE" log show --last 30s --predicate 'process == "All_In_One"' > sim-log.txt 2>&1 || true
+          ls -la sim-shot.png sim-log.txt || true
+
+      - name: Upload simulator artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulator-smoke
+          path: |
+            sim-shot.png
+            sim-log.txt
+            launch.txt
+            build-sim.log
+          if-no-files-found: warn
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            build-device.log
+            build-sim.log
+          if-no-files-found: warn

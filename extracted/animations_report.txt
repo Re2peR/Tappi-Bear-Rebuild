@@ -1,0 +1,311 @@
+======================================================================
+-_G1_Bear_initWithSheet_____00006ce0.c  clips=30 labels=None totalFrames=182 size=96x128 anchor=(47,72)
+  clip names:
+    bear1_hand.png, bear1_hand.png, bear1_body.png, bear1_light.png, bear1_back.png, bear1_leg.png
+    bear1_leg.png, bear1_fire.png, bear1_fire.png, bear1_ear.png, bear1_ear.png, bear2.png
+    bear3.png, bear4.png, bear5.png, bomb.png, bomb.png, bomb.png
+    bomb.png, bear6.png, smoke.png, smoke.png, smoke.png, smoke.png
+    smoke.png, smoke.png, smoke.png, smoke.png, smoke.png, smoke.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G1_Cover_initWithSheet_____000070a8.c  clips=17 labels=None totalFrames=50 size=322x482 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btnc1.png
+    cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.05]
+======================================================================
+-_G1_LoadBar_initWithSheet_____0000b03c.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966966,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G2_Bear1_initWithSheet_____0000e0f0.c  clips=37 labels=17 totalFrames=119 size=70x103 anchor=(35,102)
+  clip names:
+    bear2_hand1.png, bear2_hand1.png, bear2_ear1.png, bear2_ear1.png, bear2_hand2.png, bear2_hand2.png
+    spotlight.png, spotlight.png, bear2_ear2.png, donut.png, bear2_body.png, bear2_bodymask.png
+    bear2_head.png, bear2_ear1.png, bear2_ear1.png, bear2_face4.png, bear2_hand3.png, bear2_face5.png
+    bear2_leg.png, bear2_leg.png, bear2_face1.png, bear8_face1.png, bear2_face2.png, bear2_face6.png
+    bear8_face2.png, bear2_face3.png, bear8_face3.png, donut_glow.png, donut.png, bear2_hand2.png
+    bear2_ear2.png, bear8_face5.png, bear2_hand1.png, bear2_hand1.png, bear2_hand2.png, bear8_face4.png
+    add_point.png
+  labels: [(1, None), (25, None), (26, None), (27, None), (28, None), (29, None), (30, None), (31, None), (32, None), (33, None), (34, None), (35, None), (36, None), (48, None), (72, None), (89, None), (99, None)]
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5]
+======================================================================
+-_G2_BearLeader_initWithSheet_____0000e50c.c  clips=25 labels=15 totalFrames=108 size=70x103 anchor=(35,102)
+  clip names:
+    bear1_question.png, bear1_hand1.png, bear1_ear2.png, bear1_hand1.png, bear1_ear1.png, bear1_ear1.png
+    bear1_hand2.png, bear1_body.png, bear1_head.png, bear1_ear1.png, bear1_ear1.png, bear1_ear2.png
+    bear1_leg.png, bear1_leg.png, bear1_face1.png, bear1_face2.png, bear1_face3.png, bear1_ear2.png
+    bear1_face5.png, bear1_headban.png, bear1_hand2.png, bear1_hand1.png, bear1_hand1.png, bear1_hand2.png
+    bear1_face4.png
+  labels: [(1, None), (25, None), (26, None), (27, None), (28, None), (29, None), (30, None), (31, None), (32, None), (33, None), (34, None), (35, None), (36, None), (53, None), (80, None)]
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G2_Cover_initWithSheet_____0000e8d4.c  clips=17 labels=None totalFrames=50 size=322x482 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btnc1.png
+    cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.03, 0.981, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.05]
+======================================================================
+-_G2_LoadBar_initWithSheet_____00011608.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966966,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G3_BG1_initWithSheet_____00014ca8.c  clips=15 labels=None totalFrames=None size=602x50 anchor=(120,50)
+  clip names:
+    None, None, None, None, None, None
+    None, None, None, None, None, None
+    None, None, None
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G3_BG4_initWithSheet_____0001577c.c  clips=13 labels=None totalFrames=20 size=522x52 anchor=(40,52)
+  clip names:
+    None, None, None, None, None, None
+    None, None, None, None, None, None
+    None
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G3_Bear_initWithSheet_____0001457c.c  clips=24 labels=None totalFrames=95 size=75x98 anchor=(38,96)
+  clip names:
+    ninja_hand2.png, ninja_leg.png, ninja_body.png, ninja_body2.png, ninja_scarf.png, ninja_body3.png
+    ninja_hand2.png, ninja_leg.png, ninja_donut.png, ninja_hand1.png, ninja_ear2.png, ninja_head.png
+    ninja_head2.png, ninja_head3.png, ninja_ear1.png, ninja_scarf.png, ninja_jump.png, ninja_ear1.png
+    ninja_miss.png, ninja_donut2.png, ninja_donut2.png, ninja_donut2.png, ninja_donut2.png, ninja_lose.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G3_Cover_initWithSheet_____00015b40.c  clips=17 labels=None totalFrames=50 size=482x322 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btnc1.png
+    cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.007, 0.912, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G3_Enemy_initWithSheet_____0001622c.c  clips=21 labels=None totalFrames=25 size=79x127 anchor=(39,94)
+  clip names:
+    enemy_kite2.png, enemy_kite1.png, enemy_hand.png, enemy_hand.png, enemy_hit1.png, enemy5_body.png
+    enemy_s1.png, enemy_s2.png, enemy_leg.png, enemy_leg.png, enemy5_head.png, enemy5_face1.png
+    enemy5_face2.png, enemy5_glass.png, enemy_ear.png, enemy_ear.png, enemy_hit2.png, enemy_hit2.png
+    enemy_hit2.png, enemy_hit2.png, enemy_hit2.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G3_LoadBar_initWithSheet_____0001994c.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966806,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G4_Bear_initWithSheet_____0001cbb0.c  clips=31 labels=None totalFrames=138 size=130x112 anchor=(403,139)
+  clip names:
+    bruce_jump.png, bruce_hand2.png, bruce_rod1.png, bruce_rod1.png, bruce_body.png, bruce_line1.png
+    bruce_leg.png, bruce_leg.png, bruce_line2.png, bruce_ear.png, bruce_head.png, bruce_face2.png
+    bruce_face4.png, bruce_miss1.png, bruce_rod2.png, bruce_rod1.png, bruce_hand2.png, bruce_face1.png
+    bruce_hand3.png, bruce_hand1.png, bruce_rod1.png, bruce_rod1.png, bruce_rod1.png, bruce_hand3.png
+    bruce_hand1.png, bruce_hand1.png, bruce_ear.png, bruce_miss2.png, ninja_miss.png, bruce_ear.png
+    bruce_face3.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G4_Cover_initWithSheet_____0001d340.c  clips=17 labels=None totalFrames=50 size=482x322 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btnc1.png
+    cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.153, 0.981, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G4_Enemy_initWithSheet_____0001deb8.c  clips=16 labels=None totalFrames=59 size=90x127 anchor=(44,125)
+  clip names:
+    enemy1_hand.png, enemy1_body.png, enemy1_leg.png, enemy1_leg.png, enemy1_ear.png, enemy1_head.png
+    enemy1_face1.png, enemy1_face2.png, enemy1_ear.png, enemy1_headban2.png, enemy1_headban1.png, donut.png
+    enemy1_hand.png, enemy1_hit.png, star.png, star.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.6, 0.833, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G4_LoadBar_initWithSheet_____0002150c.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966806,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G5_Bear_initWithSheet_____00024670.c  clips=17 labels=None totalFrames=221 size=86x111 anchor=(4294967128,148)
+  clip names:
+    bear_leg.png, bear_leg.png, bear_hand.png, bear_body.png, bear_ear.png, bear_head.png
+    bear_ear.png, bear_face1.png, bear_face2.png, bear_hand.png, leaf1.png, leaf2.png
+    leaf1.png, leaf2.png, bear_jump1.png, bear_jump2.png, bear_jump3.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G5_Cover_initWithSheet_____00024e18.c  clips=17 labels=None totalFrames=50 size=322x482 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btnc1.png
+    cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.762, 0.912, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.05]
+======================================================================
+-_G5_Enemy_initWithSheet_____00025954.c  clips=11 labels=None totalFrames=58 size=102xNone anchor=(39,51)
+  clip names:
+    None, None, None, None, None, None
+    None, None, None, None, None
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G5_Help_initWithSheet_____00029e34.c  clips=20 labels=None totalFrames=223 size=342x260 anchor=(171,130)
+  clip names:
+    None, None, None, None, None, None
+    None, None, None, None, None, None
+    None, None, None, None, None, None
+    None, None
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G5_Layer2_initWithSheet_____0002a1c0.c  clips=28 labels=None totalFrames=None size=515x7432 anchor=(284,6059)
+  clip names:
+    None, None, None, None, None, None
+    None, None, None, None, None, None
+    None, None, None, None, None, None
+    None, None, None, None, None, None
+    None, None, None, None
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G5_LoadBar_initWithSheet_____0002a928.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966966,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G6_Bear_initWithSheet_____0002d620.c  clips=15 labels=None totalFrames=115 size=112x508 anchor=(42,963)
+  clip names:
+    bear_rope.png, bear_hat.png, bear_hand.png, bear_body.png, bear_leg.png, bear_leg.png
+    bear_ear.png, bear_head.png, bear_face.png, bear_ear.png, chick4_normal.png, bear_hand.png
+    dim.png, bear_gameover.png, gameover.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G6_ChickMuddy_initWithSheet_____0002e56c.c  clips=12 labels=None totalFrames=106 size=43x41 anchor=(22,39)
+  clip names:
+    muddy_leg.png, muddy_leg.png, muddy_wing.png, muddy_body.png, muddy_wing.png, muddy_face1.png
+    muddy_face2.png, muddy_hair.png, muddy_dust.png, muddy_dust.png, muddy_dust.png, muddy_dust.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G6_Cover_initWithSheet_____0002e934.c  clips=17 labels=None totalFrames=50 size=322x482 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btnc1.png
+    cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.971, 0.981, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.05]
+======================================================================
+-_G6_GiftEgg_initWithSheet_____00034988.c  clips=13 labels=None totalFrames=29 size=20xNone anchor=(None,None)
+  clip names:
+    bomb6.png, bomb6.png, bomb6.png, egg1.png, egg2.png, egg3.png
+    egg4.png, egg5.png, star.png, star.png, star.png, star.png
+    add_point2.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G6_LoadBar_initWithSheet_____00035484.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966966,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G7_Bear_initWithSheet_____00038184.c  clips=14 labels=None totalFrames=70 size=303x157 anchor=(78,148)
+  clip names:
+    bear_hand1.png, bear_hand2.png, bear_body.png, bear_hat.png, bear_head.png, bear_face1.png
+    bear_face2.png, bear_hand1.png, bear_hand2.png, bear_rod.png, bear_tub.png, tile_drop.png
+    tile_drop.png, tile_drop.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G7_Bomb_initWithSheet_____00038650.c  clips=11 labels=None totalFrames=60 size=39x54 anchor=(19,34)
+  clip names:
+    tile_bomb.png, circle1.png, circle2.png, circle3.png, bomb2.png, bomb6.png
+    bomb6.png, bomb6.png, bomb5.png, bomb3.png, bomb4.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G7_Cover_initWithSheet_____00039520.c  clips=18 labels=None totalFrames=50 size=322x482 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btn3_new.png
+    cover_btnc1.png, cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.798, 0.912, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.05]
+======================================================================
+-_G7_LoadBar_initWithSheet_____0003e8dc.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966966,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G8_Bear_initWithSheet_____00042844.c  clips=26 labels=None totalFrames=86 size=89x128 anchor=(44,118)
+  clip names:
+    bear_snow1.png, bear_snow1.png, bear_snow2.png, bear_snow2.png, bear_bag.png, bear_sled2.png
+    bear_body.png, bear_leg.png, bear_leg.png, bear_ear.png, bear_head1.png, bear_head2.png
+    bear_head3.png, bear_face1.png, bear_head4.png, bear_head5.png, bear_head6.png, bear_face2.png
+    bear_sled1.png, bear_hand.png, bear_hand.png, star.png, star.png, star.png
+    bear_miss2.png, bear_miss1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.716, 0.719]
+======================================================================
+-_G8_Cover_initWithSheet_____00042fb0.c  clips=18 labels=None totalFrames=50 size=482x322 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png, cover_star.png
+    cover_tappi.png, cover_title.png, cover_btn3.png, cover_btn2.png, cover_btn1.png, cover_btn3_new.png
+    cover_btnc1.png, cover_btnc2.png, cover_btnc3.png, cover_btnc4.png, cover_btnc4.png, cover_help.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+-_G8_LoadBar_initWithSheet_____00047050.c  clips=18 labels=None totalFrames=38 size=677x82 anchor=(4294966806,None)
+  clip names:
+    transition_r6.png, transition_t6.png, transition_c6.png, transition_r5.png, transition_t5.png, transition_c5.png
+    transition_r4.png, transition_t4.png, transition_c4.png, transition_r3.png, transition_t3.png, transition_c3.png
+    transition_r2.png, transition_t2.png, transition_c2.png, transition_r1.png, transition_t1.png, transition_c1.png
+  anchorX: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  anchorY: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+======================================================================
+Cover  clips=53 labels=None totalFrames=31 size=322x482 anchor=(None,None)
+  clip names:
+    cover_bg.png, cover_gc.png, cover_p1.png, cover_logo.png, wallpaper_p1.png, wallpaper_back.png
+    wallpaper_lock.png, wallpaper_null.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png
+    wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png
+    wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_null.png
+    wallpaper_null.png, wallpaper_null.png, wallpaper_null.png, wallpaper_null.png, wallpaper_null.png, wallpaper_null.png
+    wallpaper_null.png, wallpaper_null.png, wallpaper_null.png, wallpaper_null.png, wallpaper_null.png, wallpaper_null.png
+    wallpaper_null.png, wallpaper_null.png, wallpaper_lock.png, wallpaper_lock.png, wallpaper_null.png, wallpaper_null.png
+    wallpaper_null.png, wallpaper_null.png, wallpaper_lock.png, wallpaper_lock.png, cover_coin.png, dim.png
+    popup1.png, num0.png, num0.png, num0.png, popup2.png
+  anchorX: [0.003, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.5, 0.0]
+  anchorY: [0.002, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.5, 0.663]

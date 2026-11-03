@@ -1,0 +1,25 @@
+# Xcode
+build/
+build-device/
+build-sim/
+DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+xcuserdata/
+
+# 产物
+*.ipa
+*.dSYM
+_ipa_stage/
+
+# Python
+__pycache__/
+*.pyc
+
+# 引擎里不需要进仓库的
+vendor/**/*.zip
+vendor/*_x/
+
+# 系统
+.DS_Store
+Thumbs.db
