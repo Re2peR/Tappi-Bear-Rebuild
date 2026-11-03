@@ -453,10 +453,10 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     best.color = [CCColor colorWithRed:1 green:1 blue:1 alpha:0.75f];
     [self addChild:best z:101];
 
-    // 两个按钮
-    [self addButton:@"再玩一次" at:CGPointMake(d.width * 0.5f, d.height * 0.30f)
+    // 两个按钮：放在画布中上部，避开下方的玩家角色
+    [self addButton:@"再玩一次" at:CGPointMake(d.width * 0.5f, d.height * 0.40f)
              action:@selector(tapRestart)];
-    [self addButton:@"返回选关" at:CGPointMake(d.width * 0.5f, d.height * 0.20f)
+    [self addButton:@"返回选关" at:CGPointMake(d.width * 0.5f, d.height * 0.29f)
              action:@selector(tapBackToMenu)];
 }
 
