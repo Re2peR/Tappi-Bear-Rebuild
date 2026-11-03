@@ -12,7 +12,7 @@
 
 // ---- 原版常量（从 initWithSheet / tick 反汇编还原）----
 static const CGFloat kColX[3]     = {40.0f, 160.0f, 280.0f};  // 车道中心 x
-static const CGFloat kBearY       = 140.0f;   // 0x430c0000
+static const CGFloat kBearY       = 120.0f;   // 玩家角色中心 y（画布 480 的下 1/4）
 static const CGFloat kBearStartX  = 160.0f;   // 0x43200000
 static const CGFloat kBaseSpeed   = 3.0f;     // 0x40400000 = 3.0
 static const CGFloat kMaxSpeed    = 8.0f;     // 0x41000000
@@ -234,7 +234,6 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bearSprite.scale = 0.75f;                          // -> 57x96
     _bearSprite.anchorPoint = CGPointMake(0.5f, 0.5f);
     _bearSprite.position = CGPointMake(kBearStartX, kBearY);
-    _bearSprite.flipY = YES;
     [self addChild:_bearSprite z:5];
 
     _bear = nil;
