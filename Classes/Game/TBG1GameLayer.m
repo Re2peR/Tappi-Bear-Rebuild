@@ -219,37 +219,25 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bgB.position = CGPointMake(0, yB);
 }
 
-#pragma mark - 小熊（部件拼装）
+#pragma mark - 小熊（单张立绘）
 
 - (void)buildBear
 {
-    // 原版 G1_Bear 是 30 个部件拼装的：
-    //   clip 0,1   bear1_hand   (手)
-    //   clip 2     bear1_body   (身体)
-    //   clip 3     bear1_light  (光晕)
-    //   clip 4     bear1_back   (背包)
-    //   clip 5,6   bear1_leg    (腿)
-    //   clip 7,8   bear1_fire   (尾焰)
-    //   clip 9,10  bear1_ear    (耳朵)
-    //   clip 11..  bear2..bear6 (变形/受击序列)
-    //   clip 15..  bomb         (炸弹)
-    //   clip 20..  smoke        (烟)
-    //
-    // 所有部件锚点都是 (1-clipAnchorX, 1-clipAnchorY) = (1, 0)，即右下角，
-    // baseX/baseY 就是小熊的整体挂点（身体中心）。
-    _bear = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:5];
-    if (![_bear loadTableNamed:@"G1_Bear"]) return;
+    // 注意：bg.png 本身已经把「装饰性小熊、行星、甜甜圈」画进去了，
+    // 那些是背景贴图，不是可玩角色。
+    // 真正的玩家角色是 bear2.png（76x128），图集里是上下颠倒存储的，需要 flipY。
+    CCSpriteFrame *f = [[CCSpriteFrameCache sharedSpriteFrameCache]
+                        spriteFrameByName:@"bear2.png"];
+    _bearSprite = [[CCSprite alloc] initWithSpriteFrame:f];
+    if (!_bearSprite) return;
 
-    [_bear buildSpritesWithZOrder:5];
-    _bear.baseX = kBearStartX;
-    _bear.baseY = kBearY;
-    [self addChild:_bear z:5];
+    _bearSprite.scale = 0.75f;                          // -> 57x96
+    _bearSprite.anchorPoint = CGPointMake(0.5f, 0.5f);
+    _bearSprite.position = CGPointMake(kBearStartX, kBearY);
+    _bearSprite.flipY = YES;
+    [self addChild:_bearSprite z:5];
 
-    // 从 start 标签开始播放
-    [_bear gotoAndPlayName:@"start"];
-
-    // 部件拼装用不到单张精灵
-    _bearSprite = nil;
+    _bear = nil;
 }
 
 #pragma mark - 主循环
@@ -257,9 +245,6 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 - (void)tick:(CCTime)dt
 {
     [self updateBackground];
-
-    // 小熊部件动画推进（GAME OVER 时停在 die 帧）
-    [_bear tick];
 
     if (_isGameOver) return;
 
@@ -293,7 +278,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)updateBear
 {
-    CGFloat bx = (_bearSprite ? _bearSprite.position.x : _bear.baseX);
+    CGFloat bx = _bearSprite.position.x;
 
     if (_bearAction == 0) {
         CGFloat want = kColX[_currentCol];
@@ -314,12 +299,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
         }
     }
 
-    if (_bearSprite) {
-        _bearSprite.position = CGPointMake(bx, kBearY);
-    } else {
-        _bear.baseX = bx;
-        _bear.baseY = kBearY;
-    }
+    _bearSprite.position = CGPointMake(bx, kBearY);
 }
 
 #pragma mark - 石头
@@ -394,7 +374,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)checkHit
 {
-    CGFloat bx = (_bearSprite ? _bearSprite.position.x : _bear.baseX);
+    CGFloat bx = _bearSprite.position.x;
     // 小熊整体约 96x128，碰撞盒取身体核心
     CGRect bearBox = CGRectMake(bx - 22, kBearY - 20, 44, 56);
 
