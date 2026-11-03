@@ -142,7 +142,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     [self addChild:_hintLabel z:20];
 
     _gameOverLabel = [CCLabelTTF labelWithString:@"" fontName:@"Helvetica-Bold" fontSize:18];
-    _gameOverLabel.position = CGPointMake(d.width * 0.5f, d.height * 0.55f);
+    _gameOverLabel.position = CGPointMake(d.width * 0.5f, d.height - 90);
     _gameOverLabel.color = [CCColor colorWithRed:1 green:0.3f blue:0.3f alpha:1];
     [self addChild:_gameOverLabel z:30];
 
@@ -209,6 +209,9 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bearSprite.scale = 0.75f;
     _bearSprite.anchorPoint = CGPointMake(0.5f, 0.0f);   // 脚底中心
     _bearSprite.position = CGPointMake(kBearStartX, kBearY);
+    // 图集里 bear2 是上下颠倒存储的（cocos2d 1.x 的 textureRect 原点差异），
+    // 用 flipY 翻回来
+    _bearSprite.flipY = YES;
     [self addChild:_bearSprite z:5];
 }
 
@@ -324,8 +327,10 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)updateStones
 {
+    // 生成间隔：原版 colHeight=200，但那是「累积距离」且每批 3 车道留 1 空。
+    // 这里放宽到 320，让玩家有反应时间。
     _generateCount += _speed;
-    if (_generateCount >= kColHeight) {
+    if (_generateCount >= 320.0f) {
         _generateCount = 0;
         [self spawnStones];
     }
