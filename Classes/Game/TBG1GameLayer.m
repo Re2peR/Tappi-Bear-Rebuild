@@ -160,27 +160,29 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bgB = [[CCSprite alloc] initWithSpriteFrame:bgFrame];
     if (!_bgA || !_bgB) return;
 
-    CGFloat h = _bgA.contentSize.height;   // 1002
-    // 画布 480 高，背景图 1002 高，缩放让宽度铺满 320
-    CGFloat sx = self.contentSize.width / _bgA.contentSize.width;  // 320/352 ≈ 0.909
+    CGSize canvas = self.contentSize;
+    if (canvas.width < 1 || canvas.height < 1) {
+        canvas = [TBResolution designSize];
+        self.contentSize = canvas;
+    }
+    CGFloat imgW = _bgA.contentSize.width;    // 352
+    CGFloat imgH = _bgA.contentSize.height;   // 1002
+
+    // 按画布宽度缩放
+    CGFloat sx = canvas.width / imgW;         // 320/352 ≈ 0.909
+    CGFloat scaledH = imgH * sx;              // ≈ 911
+
+    // 用 (0,0) 锚点 + 左下角定位，坐标系最直观
+    _bgA.anchorPoint = CGPointZero;
+    _bgB.anchorPoint = CGPointZero;
     _bgA.scaleX = _bgA.scaleY = sx;
     _bgB.scaleX = _bgB.scaleY = sx;
 
-    CGFloat scaledH = h * sx;              // ≈ 911
-    // 画布高 480，背景图缩放后 911。
-    // 让 A 的顶部对齐画布顶部，B 接在 A 下方，两张一起向下滚。
-    _bgA.anchorPoint = CGPointMake(0.5f, 1.0f);
-    _bgB.anchorPoint = CGPointMake(0.5f, 1.0f);
-    _bgA.position = CGPointMake(self.contentSize.width * 0.5f, self.contentSize.height);
-    _bgB.position = CGPointMake(self.contentSize.width * 0.5f, self.contentSize.height - scaledH);
+    // A 从画布顶部往下铺，B 接在 A 下方
+    _bgA.position = CGPointMake(0, canvas.height);
+    _bgB.position = CGPointMake(0, canvas.height - scaledH);
 
     _bgScrollHeight = scaledH;
-
-    NSLog(@"[TB] bg: canvas=%.0fx%.0f sprite=%.0fx%.0f sx=%.3f scaledH=%.0f A=(%.0f,%.0f) B=(%.0f,%.0f)",
-          self.contentSize.width, self.contentSize.height,
-          _bgA.contentSize.width, _bgA.contentSize.height,
-          sx, scaledH,
-          _bgA.position.x, _bgA.position.y, _bgB.position.x, _bgB.position.y);
 
     [self addChild:_bgA z:-10];
     [self addChild:_bgB z:-10];
