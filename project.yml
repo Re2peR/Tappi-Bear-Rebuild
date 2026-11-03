@@ -7,6 +7,10 @@ options:
   groupSortPosition: top
   generateEmptyDirectories: true
   defaultConfig: Release
+  # XcodeGen 2.4x 默认写 objectVersion 77（Xcode 16 格式），
+  # 但 macos-14 runner 上是 Xcode 15.4（只认 60）。
+  # 显式钉住 56（Xcode 14/15 都能读）。
+  xcodeVersion: "15.4"
 
 settings:
   base:
