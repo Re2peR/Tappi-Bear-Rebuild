@@ -157,9 +157,12 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
         [self addChild:_effect z:6];
     }
 
-    // 7. 石头池：预创建两种精灵（石头 / 星星），用切换可见性复用
+    // 7. 石头池：预创建精灵，用切换可见性复用
+    //    注意必须用 alloc/init，工厂方法返回的是 CCSprite 而不是子类
+    CCSpriteFrame *rockFrame = [[CCSpriteFrameCache sharedSpriteFrameCache]
+                                spriteFrameByName:@"rock1.png"];
     for (NSInteger i = 0; i < kStonePoolSize; i++) {
-        TBG1Stone *s = (TBG1Stone *)[CCSprite spriteWithSpriteFrameName:@"rock1.png"];
+        TBG1Stone *s = [[TBG1Stone alloc] initWithSpriteFrame:rockFrame];
         if (!s) continue;
         s.visible = NO;
         s.anchorPoint = CGPointMake(0.5f, 0.5f);
