@@ -6,7 +6,7 @@
 #import "TBAppDelegate.h"
 #import "TBResolution.h"
 #import "TBScene.h"
-#import "TBBootContent.h"
+#import "TBSelectGameLayer.h"
 #import "TBAudio.h"
 
 @implementation TBAppDelegate
@@ -47,9 +47,9 @@
     [TBAudio sharedAudio].effectsVolume = 1.0;
     [TBAudio sharedAudio].musicVolume   = 1.0;
 
-    // P0：先挂自检画面；P3 之后换成 SelectGameLayer。
+    // 选关界面（原版 SelectGameLayer）
     TBScene *scene = [TBScene scene];
-    [scene presentContent:[[TBBootContent alloc] init]];
+    [scene presentContent:[[TBSelectGameLayer alloc] init]];
     [director runWithScene:scene];
 
     return YES;
