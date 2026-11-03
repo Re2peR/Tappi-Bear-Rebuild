@@ -142,7 +142,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     [self addChild:_hintLabel z:20];
 
     _gameOverLabel = [CCLabelTTF labelWithString:@"" fontName:@"Helvetica-Bold" fontSize:18];
-    _gameOverLabel.position = CGPointMake(d.width * 0.5f, d.height - 90);
+    _gameOverLabel.position = CGPointMake(d.width * 0.5f, d.height - 70);
     _gameOverLabel.color = [CCColor colorWithRed:1 green:0.3f blue:0.3f alpha:1];
     [self addChild:_gameOverLabel z:30];
 
@@ -168,10 +168,12 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bgB.scaleX = _bgB.scaleY = sx;
 
     CGFloat scaledH = h * sx;              // ≈ 911
+    // 画布高 480，背景图缩放后 911。
+    // 让 A 的顶部对齐画布顶部，B 接在 A 下方，两张一起向下滚。
     _bgA.anchorPoint = CGPointMake(0.5f, 1.0f);
     _bgB.anchorPoint = CGPointMake(0.5f, 1.0f);
-    _bgA.position = CGPointMake(self.contentSize.width * 0.5f, 0);
-    _bgB.position = CGPointMake(self.contentSize.width * 0.5f, -scaledH);
+    _bgA.position = CGPointMake(self.contentSize.width * 0.5f, self.contentSize.height);
+    _bgB.position = CGPointMake(self.contentSize.width * 0.5f, self.contentSize.height - scaledH);
 
     _bgScrollHeight = scaledH;
 
@@ -187,7 +189,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bgA.position = CGPointMake(_bgA.position.x, _bgA.position.y - dy);
     _bgB.position = CGPointMake(_bgB.position.x, _bgB.position.y - dy);
 
-    // 任何一张完全滚出屏幕下沿，就把它挪到另一张上方
+    // A 完全滚出画布下沿（顶部越过 y=0），挪到 B 上方
     if (_bgA.position.y < -_bgScrollHeight) {
         _bgA.position = CGPointMake(_bgA.position.x, _bgB.position.y + _bgScrollHeight);
     }
