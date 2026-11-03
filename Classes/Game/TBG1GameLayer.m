@@ -38,7 +38,8 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     CCSprite *_bgA;
     CCSprite *_bgB;
     CGFloat _bgScrollHeight;
-    CCSprite *_bearSprite;
+    CCSprite *_bearSprite;      // 单张立绘模式（当前未用）
+    TBMovieClip *_bear;         // 30 部件拼装模式（当前使用）
 
     NSMutableArray<TBG1Stone *> *_stones;
     NSInteger _nextStone;
@@ -513,7 +514,7 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     [self addChild:btn z:102];
 
     // 记录按钮矩形（设计坐标），在 touchBegan 里手动命中判定
-    if ([action isEqualToString:NSStringFromSelector(@selector(tapRestart))]) {
+    if (action == @selector(tapRestart)) {
         _restartRect = CGRectMake(pos.x - bw * 0.5f, pos.y - bh * 0.5f, bw, bh);
     } else {
         _menuRect = CGRectMake(pos.x - bw * 0.5f, pos.y - bh * 0.5f, bw, bh);
