@@ -159,10 +159,8 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
     // 7. 石头池：预创建两种精灵（石头 / 星星），用切换可见性复用
     for (NSInteger i = 0; i < kStonePoolSize; i++) {
-        TBG1Stone *s = [[TBG1Stone alloc] initWithSpriteFrameName:@"rock1.png"];
-        if (!s) {
-            s = [[TBG1Stone alloc] initWithImageNamed:@"g1_game.png"];
-        }
+        TBG1Stone *s = (TBG1Stone *)[CCSprite spriteWithSpriteFrameName:@"rock1.png"];
+        if (!s) continue;
         s.visible = NO;
         s.anchorPoint = CGPointMake(0.5f, 0.5f);
         [self addChild:s z:3];

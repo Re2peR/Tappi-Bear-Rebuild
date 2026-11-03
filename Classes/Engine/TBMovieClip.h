@@ -80,6 +80,9 @@
 - (void)stop;
 - (void)play;
 
+/// 每帧推进（由外层 schedule 调用）。
+- (void)tick;
+
 #pragma mark - 子类可覆盖
 
 /// 每帧应用变换后调用；用于音效等副作用。
