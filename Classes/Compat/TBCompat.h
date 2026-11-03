@@ -58,6 +58,15 @@
 
 @end
 
+#pragma mark - CCSprite（仅补声明，无实现）
+
+// cocos2d-objc 3.5 在 CCSprite.m 里实现了 +spriteWithSpriteFrameName:，
+// 但 CCSprite.h 漏了声明。这里补一个纯声明 Category（不写 @implementation，
+// 链接时直接用引擎里的实现）。
+@interface CCSprite (TBCompatSpriteFrameName)
++ (instancetype)spriteWithSpriteFrameName:(NSString *)spriteFrameName;
+@end
+
 #pragma mark - CCSpriteBatchNode（1.x 别名）
 
 @interface CCSpriteBatchNode (TBCompat1x)
