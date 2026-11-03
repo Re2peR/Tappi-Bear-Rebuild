@@ -15,6 +15,8 @@
 
 @interface TBScene : CCScene
 
++ (instancetype)scene;
+
 /// 设计画布容器。所有游戏内容都应加到这个节点上（坐标系 320x480 / 480x320）。
 @property (nonatomic, readonly, strong) TBRootLayer *rootLayer;
 
