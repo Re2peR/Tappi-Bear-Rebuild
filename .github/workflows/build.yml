@@ -103,7 +103,7 @@ jobs:
 
       - name: Simulator smoke test
         run: |
-          set -e
+          set -x
           APP=$(find build-sim -name "All_In_One.app" -maxdepth 6 | head -n 1)
           echo "app = $APP"
           test -n "$APP"
@@ -113,14 +113,27 @@ jobs:
           fi
           echo "device = $DEVICE"
           xcrun simctl boot "$DEVICE" || true
-          xcrun simctl bootstatus "$DEVICE" -b
-          xcrun simctl install "$DEVICE" "$APP"
+          xcrun simctl bootstatus "$DEVICE" -b || true
+
+          # 安装（失败也要继续截图，方便定位）
+          xcrun simctl install "$DEVICE" "$APP" 2>&1 | tee install.txt || true
+
           xcrun simctl launch "$DEVICE" com.taplay.tappibearallin1 > launch.txt 2>&1 || true
           cat launch.txt
           sleep 12
           xcrun simctl io "$DEVICE" screenshot sim-shot.png || true
-          xcrun simctl spawn "$DEVICE" log show --last 30s --predicate 'process == "All_In_One"' > sim-log.txt 2>&1 || true
-          ls -la sim-shot.png sim-log.txt || true
+          xcrun simctl spawn "$DEVICE" log show --last 40s --predicate 'process == "All_In_One"' > sim-log.txt 2>&1 || true
+          ls -la sim-shot.png sim-log.txt install.txt launch.txt || true
+
+          # 若安装或启动明确失败，让这一步失败（但 artifact 仍会上传）
+          if grep -q "failed to install" install.txt 2>/dev/null; then
+            echo "::error::simulator install failed"
+            exit 1
+          fi
+          if grep -qi "error" launch.txt 2>/dev/null; then
+            echo "::error::simulator launch failed"
+            exit 1
+          fi
 
       - name: Upload simulator artifacts
         if: always()
