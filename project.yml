@@ -45,10 +45,6 @@ settings:
       - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Support"
       - "$(SRCROOT)/vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive"
       - "$(SRCROOT)/vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive/minizip"
-      - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/include"
-      - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/objectivec/include"
-      - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/objectivec/include/ObjectiveChipmunk"
-      - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d-ext/CCChipmunkPhysics"
 
     # ---- 链接 ----
     OTHER_LDFLAGS:
@@ -106,7 +102,7 @@ settings:
     GCC_PREPROCESSOR_DEFINITIONS:
       - "$(inherited)"
       - "CC_ENABLE_METAL_RENDERING=0"
-      - "CC_PHYSICS=1"
+      - "CC_PHYSICS=0"
       - "CC_CCBREADER=0"
       - "CC_EFFECTS=0"
       - "CC_LIGHTING=0"
@@ -132,15 +128,12 @@ targets:
           - "CCNoARC.m"
       - path: vendor/cocos2d-objc/cocos2d/CCNoARC.m
         compilerFlags: "-fno-objc-arc"
-      - path: vendor/cocos2d-objc/cocos2d-ext/CCChipmunkPhysics
-      # 注意：不引入 cocos2d-ext/CCObjectAL 与 external/ObjectAL。
-      # 它们依赖 OpenAL + 已废弃的 AudioSessionSetProperty，
-      # 而音频已由 Classes/Audio/TBAudio（AVAudioPlayer）完整替代。
       - path: vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive
         excludes:
           - "**/Example/**"
-      - path: vendor/cocos2d-objc/external/Chipmunk/src
-      - path: vendor/cocos2d-objc/external/Chipmunk/objectivec/src
+      # Chipmunk 物理引擎不需要（CC_PHYSICS=0）。
+      # ObjectiveChipmunk 用手动引用计数，开 ARC 编译会报几百个错；
+      # 这个游戏完全不用物理，直接排除掉。
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.taplay.tappibearallin1
