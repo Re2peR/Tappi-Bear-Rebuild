@@ -6,6 +6,7 @@
 #import "TBCompat.h"
 #import "TBResolution.h"
 #import "TBScene.h"
+#import "TBG1GameLayer.h"
 #import "TBAudio.h"
 
 // 每个小游戏的封面图集（原版是 8 个独立 plist，不是一张大图）
@@ -56,6 +57,18 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
     if (!_didLoad) {
         _didLoad = YES;
         [self buildUI];
+
+        // CI 自动验证：设置 TB_AUTOPLAY=1 时直接进入 G1
+        if (getenv("TB_AUTOPLAY") != NULL) {
+            __weak typeof(self) weakSelf = self;
+            [self runAction:[CCActionSequence actions:
+                             [CCActionDelay actionWithDuration:1.0],
+                             [CCActionCallBlock actionWithBlock:^{
+                __strong typeof(weakSelf) s = weakSelf;
+                [s enterG1];
+            }],
+                             nil]];
+        }
     }
 }
 
@@ -121,13 +134,16 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
     p2.color = [CCColor colorWithRed:1 green:0.85 blue:0.3 alpha:1];
     [self addChild:p2 z:11];
 
-    // 5. 顶部标题（cover_logo 是 234x70，放在画布顶部内侧）
-    CCSprite *logo = [CCSprite spriteWithSpriteFrameName:@"cover_logo.png"];
-    if (logo) {
-        logo.anchorPoint = CGPointMake(0.5f, 1.0f);
-        logo.position = CGPointMake(d.width * 0.5f, d.height - 2);
-        [self addChild:logo z:20];
-    }
+    // 5. 顶部标题
+    //    cover_bg.png 本身就带完整标题（Tappi Bear All in One! 那行），
+    //    所以这里不需要再叠 cover_logo（它只有 234x70，是给别的场景用的）。
+    //    只在背景顶部加一条细分割线，让标题区和网格区分开。
+    CCDrawNode *divider = [CCDrawNode node];
+    [divider drawSegmentFrom:CGPointMake(0, d.height - 88)
+                          to:CGPointMake(d.width, d.height - 88)
+                      radius:0.5
+                       color:[CCColor colorWithRed:0.35f green:0.35f blue:0.4f alpha:0.8f]];
+    [self addChild:divider z:20];
 
     // 6. 金币 HUD（右上角）
     [self buildCoinHUD];
@@ -229,7 +245,7 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
 - (void)selectGame:(NSInteger)idx
 {
     NSLog(@"[TB] select game %ld", (long)idx);
-    _debugLabel.string = [NSString stringWithFormat:@"选择了游戏 %ld — 玩法待移植", (long)idx];
+    [[TBAudio sharedAudio] playEffect:@"select.wav"];
 
     // 给点击反馈：被点的封面弹一下
     CCSprite *s = _covers[idx - 1];
@@ -238,7 +254,43 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
                   [CCActionScaleTo actionWithDuration:0.08 scale:1.0f],
                   nil]];
 
+    if (idx == 1) {
+        // G1 已实现，直接进入
+        [self enterG1];
+    } else {
+        _debugLabel.string = [NSString stringWithFormat:@"游戏 %ld — 玩法待移植", (long)idx];
+    }
+
     if (self.onSelectGame) self.onSelectGame(idx);
+}
+
+- (void)enterG1
+{
+    CCNode *n = self.parent;
+    while (n && ![n isKindOfClass:[TBScene class]]) n = n.parent;
+    if (![n isKindOfClass:[TBScene class]]) return;
+
+    TBScene *scene = (TBScene *)n;
+    __weak typeof(self) weakSelf = self;
+    TBG1GameLayer *g1 = [[TBG1GameLayer alloc] init];
+    g1.onExit = ^{
+        __strong typeof(weakSelf) self2 = weakSelf;
+        if (self2) {
+            [self2 rebuildAndShow];
+        }
+    };
+    [scene presentContent:g1];
+}
+
+/// 从游戏返回选关界面
+- (void)rebuildAndShow
+{
+    CCNode *n = self.parent;
+    while (n && ![n isKindOfClass:[TBScene class]]) n = n.parent;
+    if (![n isKindOfClass:[TBScene class]]) return;
+
+    TBScene *scene = (TBScene *)n;
+    [scene presentContent:[[TBSelectGameLayer alloc] init]];
 }
 
 @end

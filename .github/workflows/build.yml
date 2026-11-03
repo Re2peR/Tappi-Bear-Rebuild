@@ -118,12 +118,24 @@ jobs:
           # 安装（失败也要继续截图，方便定位）
           xcrun simctl install "$DEVICE" "$APP" 2>&1 | tee install.txt || true
 
+          # 1) 先截选关界面
           xcrun simctl launch "$DEVICE" com.taplay.tappibearallin1 > launch.txt 2>&1 || true
           cat launch.txt
-          sleep 12
-          xcrun simctl io "$DEVICE" screenshot sim-shot.png || true
+          sleep 6
+          xcrun simctl io "$DEVICE" screenshot sim-shot-menu.png || true
+          xcrun simctl terminate "$DEVICE" com.taplay.tappibearallin1 || true
+          sleep 1
+
+          # 2) 再以自动进入 G1 的方式启动，截游戏内画面
+          xcrun simctl launch --terminate-running-process \
+            --env TB_AUTOPLAY=1 \
+            "$DEVICE" com.taplay.tappibearallin1 > launch-g1.txt 2>&1 || true
+          cat launch-g1.txt
+          sleep 10
+          xcrun simctl io "$DEVICE" screenshot sim-shot-g1.png || true
+
           xcrun simctl spawn "$DEVICE" log show --last 40s --predicate 'process == "All_In_One"' > sim-log.txt 2>&1 || true
-          ls -la sim-shot.png sim-log.txt install.txt launch.txt || true
+          ls -la sim-shot-menu.png sim-shot-g1.png sim-log.txt install.txt launch.txt launch-g1.txt || true
 
           # 若安装或启动明确失败，让这一步失败（但 artifact 仍会上传）
           if grep -q "failed to install" install.txt 2>/dev/null; then
@@ -141,9 +153,12 @@ jobs:
         with:
           name: simulator-smoke
           path: |
-            sim-shot.png
+            sim-shot-menu.png
+            sim-shot-g1.png
             sim-log.txt
             launch.txt
+            launch-g1.txt
+            install.txt
             build-sim.log
           if-no-files-found: warn
 
