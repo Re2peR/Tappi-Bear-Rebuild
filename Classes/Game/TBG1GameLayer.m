@@ -5,19 +5,14 @@
 #import "TBG1GameLayer.h"
 #import "TBCompat.h"
 #import "TBResolution.h"
-#import "TBMovieClip.h"
-#import "TBMovieClip+Data.h"
 #import "TBAudio.h"
 
 // ---- 原版常量（从 initWithSheet / tick 反汇编还原）----
 static const CGFloat kColX[3]     = {40.0f, 160.0f, 280.0f};  // 车道中心 x
-static const CGFloat kColWidth    = 120.0f;
-static const CGFloat kColHeight   = 200.0f;   // 石头生成间隔（累积距离）
-static const CGFloat kSpaceHeight = 340.0f;
-static const CGFloat kBaseSpeed   = 3.0f;     // 0x40400000 = 3.0
-static const CGFloat kMaxSpeed    = 8.0f;     // 0x41000000
 static const CGFloat kBearY       = 140.0f;   // 0x430c0000
 static const CGFloat kBearStartX  = 160.0f;   // 0x43200000
+static const CGFloat kBaseSpeed   = 3.0f;     // 0x40400000 = 3.0
+static const CGFloat kMaxSpeed    = 8.0f;     // 0x41000000
 static const NSInteger kStonePoolSize = 50;   // 原版 0x31+1
 
 // 石头类型（原版 G1_CustomSprite.type）
@@ -140,9 +135,10 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _hintLabel.color = [CCColor colorWithRed:1 green:1 blue:1 alpha:0.7f];
     [self addChild:_hintLabel z:20];
 
-    _gameOverLabel = [CCLabelTTF labelWithString:@"" fontName:@"Helvetica-Bold" fontSize:18];
-    _gameOverLabel.position = CGPointMake(d.width * 0.5f, d.height - 70);
-    _gameOverLabel.color = [CCColor colorWithRed:1 green:0.3f blue:0.3f alpha:1];
+    // GAME OVER 放分数正下方，避免和飞行中的星星/石头重叠
+    _gameOverLabel = [CCLabelTTF labelWithString:@"" fontName:@"Helvetica-Bold" fontSize:16];
+    _gameOverLabel.position = CGPointMake(d.width * 0.5f, d.height - 52);
+    _gameOverLabel.color = [CCColor colorWithRed:1 green:0.35f blue:0.35f alpha:1];
     [self addChild:_gameOverLabel z:30];
 
     [[TBAudio sharedAudio] playBackgroundMusic:@"bgm.mp3" loop:YES];
