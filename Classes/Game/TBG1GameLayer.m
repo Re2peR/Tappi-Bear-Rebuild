@@ -5,6 +5,9 @@
 #import "TBG1GameLayer.h"
 #import "TBCompat.h"
 #import "TBResolution.h"
+#import "TBMovieClip.h"
+#import "TBMovieClip+Data.h"
+#import "TBScene.h"
 #import "TBAudio.h"
 
 // ---- 原版常量（从 initWithSheet / tick 反汇编还原）----
@@ -56,6 +59,9 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     CCLabelTTF *_scoreLabel;
     CCLabelTTF *_hintLabel;
     CCLabelTTF *_gameOverLabel;
+
+    CGRect _restartRect;
+    CGRect _menuRect;
 
     NSInteger _touchStartCol;
     CGPoint _touchStart;
@@ -212,23 +218,37 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bgB.position = CGPointMake(0, yB);
 }
 
-#pragma mark - 小熊
+#pragma mark - 小熊（部件拼装）
 
 - (void)buildBear
 {
-    CCSpriteFrame *f = [[CCSpriteFrameCache sharedSpriteFrameCache]
-                        spriteFrameByName:@"bear2.png"];
-    _bearSprite = [[CCSprite alloc] initWithSpriteFrame:f];
-    if (!_bearSprite) return;
+    // 原版 G1_Bear 是 30 个部件拼装的：
+    //   clip 0,1   bear1_hand   (手)
+    //   clip 2     bear1_body   (身体)
+    //   clip 3     bear1_light  (光晕)
+    //   clip 4     bear1_back   (背包)
+    //   clip 5,6   bear1_leg    (腿)
+    //   clip 7,8   bear1_fire   (尾焰)
+    //   clip 9,10  bear1_ear    (耳朵)
+    //   clip 11..  bear2..bear6 (变形/受击序列)
+    //   clip 15..  bomb         (炸弹)
+    //   clip 20..  smoke        (烟)
+    //
+    // 所有部件锚点都是 (1-clipAnchorX, 1-clipAnchorY) = (1, 0)，即右下角，
+    // baseX/baseY 就是小熊的整体挂点（身体中心）。
+    _bear = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:5];
+    if (![_bear loadTableNamed:@"G1_Bear"]) return;
 
-    // bear2 原始 76x128，缩到 57x96（设计画布 320x480 的合理角色尺寸）
-    _bearSprite.scale = 0.75f;
-    _bearSprite.anchorPoint = CGPointMake(0.5f, 0.0f);   // 脚底中心
-    _bearSprite.position = CGPointMake(kBearStartX, kBearY);
-    // 图集里 bear2 是上下颠倒存储的（cocos2d 1.x 的 textureRect 原点差异），
-    // 用 flipY 翻回来
-    _bearSprite.flipY = YES;
-    [self addChild:_bearSprite z:5];
+    [_bear buildSpritesWithZOrder:5];
+    _bear.baseX = kBearStartX;
+    _bear.baseY = kBearY;
+    [self addChild:_bear z:5];
+
+    // 从 start 标签开始播放
+    [_bear gotoAndPlayName:@"start"];
+
+    // 部件拼装用不到单张精灵
+    _bearSprite = nil;
 }
 
 #pragma mark - 主循环
@@ -236,6 +256,9 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 - (void)tick:(CCTime)dt
 {
     [self updateBackground];
+
+    // 小熊部件动画推进（GAME OVER 时停在 die 帧）
+    [_bear tick];
 
     if (_isGameOver) return;
 
@@ -254,13 +277,14 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)handleInput
 {
-    if (!_isMouseDown || _bearAction != 0) return;
+    // 不用 _isMouseDown 做门闸：点一下就抬手的情况很常见，
+    // 只要收到触摸就立刻决定目标车道。
+    if (_bearAction != 0) return;
 
-    // 把 x 按 gWidth/3 分档
     NSInteger col = (NSInteger)(_mouseX / (self.contentSize.width / 3.0f));
     col = MAX(0, MIN(2, col));
 
-    if (col != _currentCol && _bearAction == 0) {
+    if (col != _currentCol) {
         _targetCol = col;
         _bearAction = (col > _currentCol) ? 2 : 1;
     }
@@ -268,28 +292,32 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)updateBear
 {
+    CGFloat bx = (_bearSprite ? _bearSprite.position.x : _bear.baseX);
+
     if (_bearAction == 0) {
-        _bearSprite.position = CGPointMake(kColX[_currentCol], kBearY);
-        return;
-    }
-
-    CGFloat targetX = kColX[_targetCol];
-    CGFloat step = 4.5f;
-
-    if (_bearAction == 2) {
-        _bearSprite.position = CGPointMake(_bearSprite.position.x + step, kBearY);
-        if (_bearSprite.position.x >= targetX) {
-            _bearSprite.position = CGPointMake(targetX, kBearY);
-            _bearAction = 0;
-            _currentCol = _targetCol;
+        CGFloat want = kColX[_currentCol];
+        if (fabs(bx - want) > 0.5f) {
+            bx = bx + (want - bx) * 0.35f;
+        } else {
+            bx = want;
         }
     } else {
-        _bearSprite.position = CGPointMake(_bearSprite.position.x - step, kBearY);
-        if (_bearSprite.position.x <= targetX) {
-            _bearSprite.position = CGPointMake(targetX, kBearY);
-            _bearAction = 0;
-            _currentCol = _targetCol;
+        CGFloat targetX = kColX[_targetCol];
+        CGFloat step = 5.0f;
+        if (_bearAction == 2) {
+            bx += step;
+            if (bx >= targetX) { bx = targetX; _bearAction = 0; _currentCol = _targetCol; }
+        } else {
+            bx -= step;
+            if (bx <= targetX) { bx = targetX; _bearAction = 0; _currentCol = _targetCol; }
         }
+    }
+
+    if (_bearSprite) {
+        _bearSprite.position = CGPointMake(bx, kBearY);
+    } else {
+        _bear.baseX = bx;
+        _bear.baseY = kBearY;
     }
 }
 
@@ -365,8 +393,9 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)checkHit
 {
-    // 小熊立绘 76x128 缩放 0.75 -> 57x96，锚点脚底中心
-    CGRect bearBox = CGRectMake(_bearSprite.position.x - 20, kBearY + 10, 40, 56);
+    CGFloat bx = (_bearSprite ? _bearSprite.position.x : _bear.baseX);
+    // 小熊整体约 96x128，碰撞盒取身体核心
+    CGRect bearBox = CGRectMake(bx - 22, kBearY - 20, 44, 56);
 
     for (TBG1Stone *s in _stones) {
         if (!s.visible) continue;
@@ -406,23 +435,128 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 
-    // 2 秒后返回选关
-    __weak typeof(self) weakSelf = self;
-    [self runAction:[CCActionSequence actions:
-                     [CCActionDelay actionWithDuration:2.0],
-                     [CCActionCallBlock actionWithBlock:^{
-        __strong typeof(weakSelf) self2 = weakSelf;
-        if (self2 && self2.onExit) self2.onExit();
-    }],
-                     nil]];
+    [self showGameOverPanel];
+}
+
+#pragma mark - GAME OVER 面板
+
+- (void)showGameOverPanel
+{
+    CGSize d = self.contentSize;
+
+    // 半透明遮罩，拦截后续触摸
+    CCNodeColor *dim = [CCNodeColor nodeWithColor:[CCColor colorWithRed:0 green:0 blue:0 alpha:0.55f]
+                                            width:d.width height:d.height];
+    dim.anchorPoint = CGPointZero;
+    dim.position = CGPointZero;
+    dim.userInteractionEnabled = YES;   // 吃掉触摸，防止误触到游戏层
+    [self addChild:dim z:100];
+
+    // 标题
+    CCLabelTTF *title = [CCLabelTTF labelWithString:@"GAME OVER"
+                                          fontName:@"Helvetica-Bold" fontSize:26];
+    title.position = CGPointMake(d.width * 0.5f, d.height * 0.62f);
+    title.color = [CCColor colorWithRed:1 green:0.35f blue:0.3f alpha:1];
+    [self addChild:title z:101];
+
+    // 本局得分
+    CCLabelTTF *scLbl = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d", (int)_score]
+                                          fontName:@"Helvetica-Bold" fontSize:34];
+    scLbl.position = CGPointMake(d.width * 0.5f, d.height * 0.50f);
+    scLbl.color = [CCColor colorWithRed:1 green:0.95f blue:0.4f alpha:1];
+    [self addChild:scLbl z:101];
+
+    // 最高分
+    CCLabelTTF *best = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"BEST  %ld", (long)_topScore]
+                                          fontName:@"Helvetica" fontSize:11];
+    best.position = CGPointMake(d.width * 0.5f, d.height * 0.44f);
+    best.color = [CCColor colorWithRed:1 green:1 blue:1 alpha:0.75f];
+    [self addChild:best z:101];
+
+    // 两个按钮
+    [self addButton:@"再玩一次" at:CGPointMake(d.width * 0.5f, d.height * 0.30f)
+             action:@selector(tapRestart)];
+    [self addButton:@"返回选关" at:CGPointMake(d.width * 0.5f, d.height * 0.20f)
+             action:@selector(tapBackToMenu)];
+}
+
+- (void)addButton:(NSString *)text at:(CGPoint)pos action:(SEL)action
+{
+    CCLabelTTF *label = [CCLabelTTF labelWithString:text
+                                          fontName:@"Helvetica-Bold" fontSize:15];
+    label.color = [CCColor whiteColor];
+
+    CGSize ts = label.contentSize;
+    CGFloat bw = ts.width + 48;
+    CGFloat bh = ts.height + 22;
+
+    CCDrawNode *box = [CCDrawNode node];
+    const CGPoint quad[4] = {
+        CGPointMake(-bw * 0.5f, -bh * 0.5f),
+        CGPointMake(bw * 0.5f, -bh * 0.5f),
+        CGPointMake(bw * 0.5f, bh * 0.5f),
+        CGPointMake(-bw * 0.5f, bh * 0.5f),
+    };
+    [box drawPolyWithVerts:quad count:4
+                 fillColor:[CCColor colorWithRed:0.18f green:0.42f blue:0.72f alpha:0.95f]
+               borderWidth:1.5f
+               borderColor:[CCColor colorWithRed:0.5f green:0.75f blue:1 alpha:1]];
+    box.position = CGPointZero;
+
+    CCNode *btn = [CCNode node];
+    btn.position = pos;
+    btn.contentSize = CGSizeMake(bw, bh);
+    btn.anchorPoint = CGPointMake(0.5f, 0.5f);
+    [btn addChild:box z:0];
+    label.position = CGPointZero;
+    [btn addChild:label z:1];
+    [self addChild:btn z:102];
+
+    // 记录按钮矩形（设计坐标），在 touchBegan 里手动命中判定
+    if ([action isEqualToString:NSStringFromSelector(@selector(tapRestart))]) {
+        _restartRect = CGRectMake(pos.x - bw * 0.5f, pos.y - bh * 0.5f, bw, bh);
+    } else {
+        _menuRect = CGRectMake(pos.x - bw * 0.5f, pos.y - bh * 0.5f, bw, bh);
+    }
+}
+
+- (void)tapRestart
+{
+    NSLog(@"[TB] restart G1");
+    CCNode *n = self.parent;
+    while (n && ![n isKindOfClass:[TBScene class]]) n = n.parent;
+    if (![n isKindOfClass:[TBScene class]]) return;
+
+    TBScene *scene = (TBScene *)n;
+    TBG1GameLayer *g1 = [[TBG1GameLayer alloc] init];
+    g1.onExit = self.onExit;
+    [scene presentContent:g1];
+}
+
+- (void)tapBackToMenu
+{
+    NSLog(@"[TB] back to menu");
+    if (self.onExit) self.onExit();
 }
 
 #pragma mark - 触摸
 
 - (void)touchBegan:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
-    if (_isGameOver) return;
     CGPoint p = [touch locationInNode:self];
+
+    // GAME OVER 时只处理按钮
+    if (_isGameOver) {
+        if (!CGRectIsEmpty(_restartRect) && CGRectContainsPoint(_restartRect, p)) {
+            [[TBAudio sharedAudio] playEffect:@"select.wav"];
+            [self tapRestart];
+        } else if (!CGRectIsEmpty(_menuRect) && CGRectContainsPoint(_menuRect, p)) {
+            [[TBAudio sharedAudio] playEffect:@"select.wav"];
+            [self tapBackToMenu];
+        }
+        return;
+    }
+
     _isMouseDown = YES;
     _mouseX = p.x;
     _touchStart = p;
@@ -442,6 +576,16 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     if (_isGameOver) return;
     CGPoint p = [touch locationInNode:self];
     _mouseX = p.x;
+
+    // 拖动过程中也实时判定车道，不等 tick
+    if (_bearAction == 0) {
+        NSInteger col = (NSInteger)(p.x / (self.contentSize.width / 3.0f));
+        col = MAX(0, MIN(2, col));
+        if (col != _currentCol) {
+            _targetCol = col;
+            _bearAction = (col > _currentCol) ? 2 : 1;
+        }
+    }
 }
 
 - (void)touchEnded:(CCTouch *)touch withEvent:(CCTouchEvent *)event
