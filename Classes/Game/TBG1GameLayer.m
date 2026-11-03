@@ -189,16 +189,27 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     if (!_bgA || !_bgB) return;
 
     CGFloat dy = _speed * 1.2f;
-    _bgA.position = CGPointMake(_bgA.position.x, _bgA.position.y - dy);
-    _bgB.position = CGPointMake(_bgB.position.x, _bgB.position.y - dy);
+    CGFloat yA = _bgA.position.y - dy;
+    CGFloat yB = _bgB.position.y - dy;
 
-    // A 完全滚出画布下沿（顶部越过 y=0），挪到 B 上方
-    if (_bgA.position.y < -_bgScrollHeight) {
-        _bgA.position = CGPointMake(_bgA.position.x, _bgB.position.y + _bgScrollHeight);
+    // 画布顶部 = canvas.height。某张图的顶部越过画布底部（y < -scaledH）就重置到最上方。
+    // 用「相对另一张」的方式重置，避免误差累积出接缝。
+    CGFloat canvasH = self.contentSize.height;
+    CGFloat limit = -_bgScrollHeight;
+
+    if (yA < limit) {
+        yA = yB + _bgScrollHeight;
+    } else if (yB < limit) {
+        yB = yA + _bgScrollHeight;
     }
-    if (_bgB.position.y < -_bgScrollHeight) {
-        _bgB.position = CGPointMake(_bgB.position.x, _bgA.position.y + _bgScrollHeight);
+    // 保险：两张都掉下去（极端帧率）时重新铺
+    if (yA < limit && yB < limit) {
+        yA = canvasH;
+        yB = canvasH - _bgScrollHeight;
     }
+
+    _bgA.position = CGPointMake(0, yA);
+    _bgB.position = CGPointMake(0, yB);
 }
 
 #pragma mark - 小熊
