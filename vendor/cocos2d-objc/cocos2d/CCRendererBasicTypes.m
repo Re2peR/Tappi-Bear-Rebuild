@@ -59,9 +59,10 @@ NSString * const CCBlendEquationAlpha = @"CCBlendEquationAlpha";
 	if(blendMode) return blendMode;
 	
 	// Normalize the blending mode to use for the key.
-	id src = (options[CCBlendFuncSrcColor] ?: @(GL_ONE));
-	id dst = (options[CCBlendFuncDstColor] ?: @(GL_ZERO));
-	id equation = (options[CCBlendEquationColor] ?: @(GL_FUNC_ADD));
+	// 注意：Xcode 15+ 不再允许在 id<NSCopying> 上用字典下标，改用 objectForKey:。
+	id src = ([options objectForKey:CCBlendFuncSrcColor] ?: @(GL_ONE));
+	id dst = ([options objectForKey:CCBlendFuncDstColor] ?: @(GL_ZERO));
+	id equation = ([options objectForKey:CCBlendEquationColor] ?: @(GL_FUNC_ADD));
 	
 	NSDictionary *normalized = @{
 		CCBlendFuncSrcColor: src,
@@ -69,9 +70,9 @@ NSString * const CCBlendEquationAlpha = @"CCBlendEquationAlpha";
 		CCBlendEquationColor: equation,
 		
 		// Assume they meant non-separate blending if they didn't fill in the keys.
-		CCBlendFuncSrcAlpha: (options[CCBlendFuncSrcAlpha] ?: src),
-		CCBlendFuncDstAlpha: (options[CCBlendFuncDstAlpha] ?: dst),
-		CCBlendEquationAlpha: (options[CCBlendEquationAlpha] ?: equation),
+		CCBlendFuncSrcAlpha: ([options objectForKey:CCBlendFuncSrcAlpha] ?: src),
+		CCBlendFuncDstAlpha: ([options objectForKey:CCBlendFuncDstAlpha] ?: dst),
+		CCBlendEquationAlpha: ([options objectForKey:CCBlendEquationAlpha] ?: equation),
 	};
 	
 	// Create the key using the normalized blending mode.
