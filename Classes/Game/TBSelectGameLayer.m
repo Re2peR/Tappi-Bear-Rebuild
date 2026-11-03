@@ -121,10 +121,11 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
     p2.color = [CCColor colorWithRed:1 green:0.85 blue:0.3 alpha:1];
     [self addChild:p2 z:11];
 
-    // 5. 顶部标题
+    // 5. 顶部标题（cover_logo 是 234x70，放在画布顶部内侧）
     CCSprite *logo = [CCSprite spriteWithSpriteFrameName:@"cover_logo.png"];
     if (logo) {
-        logo.position = CGPointMake(d.width * 0.5f, d.height - 40);
+        logo.anchorPoint = CGPointMake(0.5f, 1.0f);
+        logo.position = CGPointMake(d.width * 0.5f, d.height - 2);
         [self addChild:logo z:20];
     }
 
@@ -142,15 +143,7 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
     // 8. 背景音乐
     [[TBAudio sharedAudio] playBackgroundMusic:@"bgm.mp3" loop:YES];
 
-    // 9. 让场景用封面背景图案填充画布外的黑边
-    //    内容挂在 TBRootLayer 上，所以沿父链向上找 TBScene
-    CCNode *n = self.parent;
-    while (n && ![n isKindOfClass:[TBScene class]]) {
-        n = n.parent;
-    }
-    if ([n isKindOfClass:[TBScene class]]) {
-        [(TBScene *)n setBackdropTextureNamed:@"cover_bg.png"];
-    }
+    // 9. 背景用深色底（已在 TBScene 里设置），这里不再覆盖
 }
 
 - (void)addGridFrameX1:(CGFloat)x1 y1:(CGFloat)y1 x2:(CGFloat)x2 y2:(CGFloat)y2

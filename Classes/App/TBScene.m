@@ -10,6 +10,7 @@
 @implementation TBScene {
     CCNode *_content;
     CCSprite *_backdropSprite;
+    CCNodeColor *_backdropColor;
 }
 
 + (instancetype)scene
@@ -30,6 +31,9 @@
         // 2. 设计画布容器。
         _rootLayer = [[TBRootLayer alloc] initWithDesignSize:design];
         [self addChild:_rootLayer z:0];
+
+        // 默认深色底，避免 letterbox 区域纯黑显得突兀
+        [self setBackdropColor:[CCColor colorWithRed:0.10f green:0.10f blue:0.12f alpha:1.0f]];
     }
     return self;
 }
@@ -46,10 +50,25 @@
     [self relayoutForCurrentView];
 }
 
-#pragma mark - 背景图案
+#pragma mark - 背景
+
+- (void)setBackdropColor:(CCColor *)color
+{
+    [_backdropColor removeFromParent];
+    _backdropColor = nil;
+    if (!color) return;
+
+    CGSize screen = [self screenSize];
+    CCNodeColor *c = [CCNodeColor nodeWithColor:color width:screen.width height:screen.height];
+    c.anchorPoint = CGPointZero;
+    c.position = CGPointZero;
+    [_backdrop addChild:c z:-1];
+    _backdropColor = c;
+    [self layoutBackdrop];
+}
 
 /// 用一张小图平铺填满整个屏幕（画布外的黑边区域）。
-/// 原版是用 X2board1-4.png 拼边框；这里用同一张背景图平铺，观感更连续。
+/// 注意：不要用含文字/logo 的整图（放大会糊）。
 - (void)setBackdropTextureNamed:(NSString *)frameName
 {
     [_backdropSprite removeFromParent];
@@ -72,6 +91,14 @@
     [self layoutBackdrop];
 }
 
+- (CGSize)screenSize
+{
+    UIView *view = nil;
+    id v = [CCDirector sharedDirector].view;
+    if ([v isKindOfClass:[UIView class]]) view = (UIView *)v;
+    return view ? view.bounds.size : [UIScreen mainScreen].bounds.size;
+}
+
 #pragma mark - 布局
 
 - (void)relayoutForCurrentView
@@ -82,26 +109,28 @@
 
 - (void)layoutBackdrop
 {
-    UIView *view = nil;
-    id v = [CCDirector sharedDirector].view;
-    if ([v isKindOfClass:[UIView class]]) view = (UIView *)v;
-    CGSize screen = view ? view.bounds.size : [UIScreen mainScreen].bounds.size;
+    CGSize screen = [self screenSize];
 
     _backdrop.position = CGPointZero;
     _backdrop.contentSize = screen;
     _backdrop.scaleX = 1.0;
     _backdrop.scaleY = 1.0;
 
+    if (_backdropColor) {
+        _backdropColor.contentSize = screen;
+        _backdropColor.position = CGPointZero;
+    }
+
     // 平铺：把一张图按屏幕尺寸拉伸（背景是重复图案，拉伸可接受且无接缝）
     if (_backdropSprite && _backdropSprite.contentSize.width > 0) {
         CGFloat sx = screen.width / _backdropSprite.contentSize.width;
         CGFloat sy = screen.height / _backdropSprite.contentSize.height;
-        // 取较大值保证铺满，再居中裁剪
         CGFloat s = MAX(sx, sy);
         _backdropSprite.scaleX = s;
         _backdropSprite.scaleY = s;
-        _backdropSprite.position = CGPointMake((screen.width - _backdropSprite.contentSize.width * s) * 0.5f,
-                                               (screen.height - _backdropSprite.contentSize.height * s) * 0.5f);
+        _backdropSprite.position = CGPointMake(
+            (screen.width - _backdropSprite.contentSize.width * s) * 0.5f,
+            (screen.height - _backdropSprite.contentSize.height * s) * 0.5f);
     }
 }
 
