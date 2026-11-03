@@ -73,7 +73,6 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
         self.contentSize = [TBResolution designSize];
         self.anchorPoint = CGPointZero;
         self.userInteractionEnabled = YES;
-
         _stones = [NSMutableArray array];
         _speed = kBaseSpeed;
         _score = 0;
@@ -176,6 +175,12 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _bgB.position = CGPointMake(self.contentSize.width * 0.5f, self.contentSize.height - scaledH);
 
     _bgScrollHeight = scaledH;
+
+    NSLog(@"[TB] bg: canvas=%.0fx%.0f sprite=%.0fx%.0f sx=%.3f scaledH=%.0f A=(%.0f,%.0f) B=(%.0f,%.0f)",
+          self.contentSize.width, self.contentSize.height,
+          _bgA.contentSize.width, _bgA.contentSize.height,
+          sx, scaledH,
+          _bgA.position.x, _bgA.position.y, _bgB.position.x, _bgB.position.y);
 
     [self addChild:_bgA z:-10];
     [self addChild:_bgB z:-10];
