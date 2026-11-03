@@ -145,7 +145,26 @@
             alpha = x->alpha;
         }
 
-        sp.position = CGPointMake(_baseX + dx, _baseY + dy);
+        // 原版 gotoAndPlayFrame: 的算法（反汇编还原）：
+        //   x = baseX + dx * baseScaleX
+        //   y = baseY - dy * baseScaleY      <-- 注意是减法
+        //   scaleX = baseScaleX * frameScaleX
+        //   scaleY = baseScaleY * frameScaleY
+        //   rotation = baseRotation + frameRotation
+        //   opacity = frameAlpha + baseAlpha
+        //
+        // 帧表里 scaleX=scaleY=0 且 alpha=0 的记录表示「该部件此帧不参与」，
+        // 原版这时会把 sprite 的 scale 设成 0（自然不可见）。
+        if (row) {
+            BOOL inactive = (sx == 0.0f && sy == 0.0f && alpha == 0.0f);
+            if (inactive) {
+                sp.visible = NO;
+                continue;
+            }
+        }
+
+        sp.position = CGPointMake(_baseX + dx * _baseScaleX,
+                                  _baseY - dy * _baseScaleY);
         sp.scaleX = _baseScaleX * sx;
         sp.scaleY = _baseScaleY * sy;
         sp.rotation = _baseRotation + rot;

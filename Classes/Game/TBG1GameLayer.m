@@ -112,7 +112,8 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
     _sheet = [CCSpriteBatchNode batchNodeWithFile:@"g1_game.png"];
     if (_sheet) [self addChild:_sheet z:0];
 
-    // 2. 背景（1 clip / 3501 帧的长条滚动图）
+    // 2. 背景（1 clip / 3501 帧的长条滚动图，352x1002）
+    //    原版把它放在 (0,0) 锚点左下，靠帧表里的 dy 做滚动。
     _background = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:0];
     if ([_background loadTableNamed:@"G1_Background"]) {
         [_background buildSpritesWithZOrder:0];
@@ -122,15 +123,20 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
         [_background gotoAndPlayFrame:1];
     }
 
-    // 3. 星球装饰
+    // 3. 星球装饰（2 clip）
     _planet = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:1];
     if ([_planet loadTableNamed:@"G1_Planet"]) {
         [_planet buildSpritesWithZOrder:1];
+        _planet.baseX = 0;
+        _planet.baseY = 0;
         [self addChild:_planet z:1];
         [_planet gotoAndPlayFrame:1];
     }
 
-    // 4. 小熊（30 clip / 182 帧）
+    // 4. 小熊（30 clip / 182 帧，分部件拼装）
+    //    原版 anchorX=47 / anchorY=72 是整体锚点（96x128 立绘的中心偏下），
+    //    clipAnchorX/Y 全为 0/1 -> 每个部件锚点 (1,0) 即左下角，
+    //    所以 baseX/baseY 就是「小熊脚底中心」的挂点。
     _bear = [[TBMovieClip alloc] initWithSheet:_sheet zOrder:5];
     if ([_bear loadTableNamed:@"G1_Bear"]) {
         [_bear buildSpritesWithZOrder:5];
@@ -305,8 +311,9 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
         s.kind = isStar ? TBStoneTypeStar : TBStoneTypeRock;
         s.lane = lane;
         s.anchorPoint = CGPointMake(0.5f, 0.5f);
-        s.position = CGPointMake(kColX[lane], self.contentSize.height + 40.0f);
-        s.scale = isStar ? 0.6f : 0.55f;
+        s.position = CGPointMake(kColX[lane], self.contentSize.height + 60.0f);
+        // rock1 原始 124x126，缩到约 40pt；星星 34x32，缩到约 26pt
+        s.scale = isStar ? 0.75f : 0.34f;
         s.visible = YES;
     }
 }
@@ -333,12 +340,18 @@ typedef NS_ENUM(NSInteger, TBStoneType) {
 
 - (void)checkHit
 {
-    CGRect bearBox = CGRectMake(_bear.baseX - 26, kBearY - 34, 52, 68);
+    // 小熊立绘 96x128，锚点 (47,72)。碰撞盒只取身体核心（不含耳朵/尾巴），
+    // 原版判定比较宽松，这里再收窄一点，避免"擦边就死"。
+    CGRect bearBox = CGRectMake(_bear.baseX - 20, kBearY - 26, 40, 52);
 
     for (TBG1Stone *s in _stones) {
         if (!s.visible) continue;
 
-        CGRect sb = CGRectMake(s.position.x - 18, s.position.y - 18, 36, 36);
+        // 石头按实际显示尺寸算，再收 30%（宽容判定）
+        CGFloat w = MAX(s.contentSize.width * s.scaleX * 0.7f, 16);
+        CGFloat h = MAX(s.contentSize.height * s.scaleY * 0.7f, 16);
+        CGRect sb = CGRectMake(s.position.x - w * 0.5f,
+                               s.position.y - h * 0.5f, w, h);
         if (!CGRectIntersectsRect(bearBox, sb)) continue;
 
         if (s.kind == TBStoneTypeStar) {
