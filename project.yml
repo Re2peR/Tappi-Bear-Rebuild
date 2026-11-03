@@ -47,6 +47,7 @@ settings:
       - "$(SRCROOT)/vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive/minizip"
       - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/include"
       - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/objectivec/include"
+      - "$(SRCROOT)/vendor/cocos2d-objc/external/Chipmunk/objectivec/include/ObjectiveChipmunk"
       - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d-ext/CCChipmunkPhysics"
 
     # ---- 链接 ----
