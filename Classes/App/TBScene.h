@@ -26,6 +26,9 @@
 /// 把一个新的节点挂到画布上（替换已有内容）。
 - (void)presentContent:(CCNode *)content;
 
+/// 设置画布外的背景图案（帧名或图片名），用于填充黑边。传 nil 清除。
+- (void)setBackdropTextureNamed:(NSString *)frameName;
+
 /// 竖屏 / 横屏设计画布切换。
 - (void)applyDesignSize:(CGSize)designSize;
 

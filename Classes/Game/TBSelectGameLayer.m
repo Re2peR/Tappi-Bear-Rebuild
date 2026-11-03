@@ -5,6 +5,7 @@
 #import "TBSelectGameLayer.h"
 #import "TBCompat.h"
 #import "TBResolution.h"
+#import "TBScene.h"
 #import "TBAudio.h"
 
 // 每个小游戏的封面图集（原版是 8 个独立 plist，不是一张大图）
@@ -71,11 +72,12 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
         [self addChild:_sheet z:0];
     }
 
-    // 2. 背景
+    // 2. 背景：cover_bg 是 322x482 的整图，画布 320x480 略微超出，
+    //    用它自己的边缘延伸填满画布（等比居中策略下画布外由 TBScene 的背景层负责）。
     CCSprite *bg = [CCSprite spriteWithSpriteFrameName:@"cover_bg.png"];
     if (bg) {
-        bg.anchorPoint = CGPointMake(0, 0);
-        bg.position = CGPointZero;
+        bg.anchorPoint = CGPointMake(0.5f, 0.5f);
+        bg.position = CGPointMake(d.width * 0.5f, d.height * 0.5f);
         [self addChild:bg z:0];
     }
 
@@ -96,12 +98,13 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
         CGFloat cx = (kHotX[i] + kHotX2[i]) * 0.5f;
         CGFloat cy = (kHotY[i] + kHotY2[i]) * 0.5f;
 
-        // 缩放到格子里（留 6pt 边距）
-        CGFloat cellW = (kHotX2[i] - kHotX[i]) - 12;
-        CGFloat cellH = (kHotY2[i] - kHotY[i]) - 12;
-        CGFloat s = MIN(cellW / MAX(thumb.contentSize.width, 1),
-                        cellH / MAX(thumb.contentSize.height, 1));
-        thumb.scale = MIN(s, 1.0f);
+        // cover_tappi 是整图立绘（约 200x270 ~ 330x290）。
+        // 塞进 ~94x95 的格子时按「宽度适配」缩放，保证角色完整且不变形。
+        CGFloat cellW = (kHotX2[i] - kHotX[i]) - 10;
+        CGFloat cellH = (kHotY2[i] - kHotY[i]) - 10;
+        CGFloat sw = cellW / MAX(thumb.contentSize.width, 1);
+        CGFloat sh = cellH / MAX(thumb.contentSize.height, 1);
+        thumb.scale = MIN(sw, sh);
         thumb.position = CGPointMake(cx, cy);
         [self addChild:thumb z:10];
         [_covers addObject:thumb];
@@ -128,16 +131,26 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
     // 6. 金币 HUD（右上角）
     [self buildCoinHUD];
 
-    // 7. 调试信息
-    _debugLabel = [CCLabelTTF labelWithString:@"" fontName:@"Menlo" fontSize:8];
-    _debugLabel.anchorPoint = CGPointMake(0, 1);
-    _debugLabel.position = CGPointMake(4, d.height - 4);
-    _debugLabel.color = [CCColor colorWithRed:0.4 green:1 blue:0.4 alpha:1];
+    // 7. 调试信息（放左下角，避开 logo 和 HUD）
+    _debugLabel = [CCLabelTTF labelWithString:@"" fontName:@"Menlo" fontSize:7];
+    _debugLabel.anchorPoint = CGPointMake(0, 0);
+    _debugLabel.position = CGPointMake(4, 4);
+    _debugLabel.color = [CCColor colorWithRed:1 green:1 blue:1 alpha:0.55];
     [self addChild:_debugLabel z:100];
     [self updateDebugLabel];
 
     // 8. 背景音乐
     [[TBAudio sharedAudio] playBackgroundMusic:@"bgm.mp3" loop:YES];
+
+    // 9. 让场景用封面背景图案填充画布外的黑边
+    //    内容挂在 TBRootLayer 上，所以沿父链向上找 TBScene
+    CCNode *n = self.parent;
+    while (n && ![n isKindOfClass:[TBScene class]]) {
+        n = n.parent;
+    }
+    if ([n isKindOfClass:[TBScene class]]) {
+        [(TBScene *)n setBackdropTextureNamed:@"cover_bg.png"];
+    }
 }
 
 - (void)addGridFrameX1:(CGFloat)x1 y1:(CGFloat)y1 x2:(CGFloat)x2 y2:(CGFloat)y2
@@ -163,22 +176,26 @@ static const CGFloat kPage2X1 = 213, kPage2X2 = 320, kPage2Y1 = 46, kPage2Y2 = 1
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 
+    // 金币 HUD 放右下角（原版在右上，但那里被 logo 占了）
+    CGFloat baseY = 18;
+
     // 金币图标
     CCSprite *icon = [CCSprite spriteWithSpriteFrameName:@"cover_coin.png"];
     if (icon) {
-        icon.position = CGPointMake(d.width - 70, d.height - 22);
+        icon.scale = 0.7f;
+        icon.position = CGPointMake(d.width - 96, baseY);
         [self addChild:icon z:30];
     }
 
-    // 6 位数字，间距 18（原版）
+    // 6 位数字，间距 9（原版是 18 但那是 1x 下的 32px 数字）
     NSString *s = [NSString stringWithFormat:@"%06ld", (long)MIN(coin, 999999)];
     for (NSInteger i = 0; i < 6; i++) {
         unichar ch = [s characterAtIndex:i];
         NSString *name = [NSString stringWithFormat:@"num%c.png", (char)ch];
         CCSprite *n = [CCSprite spriteWithSpriteFrameName:name];
         if (!n) continue;
-        n.scale = 0.5f;
-        n.position = CGPointMake(d.width - 52 + i * 9, d.height - 22);
+        n.scale = 0.42f;
+        n.position = CGPointMake(d.width - 78 + i * 12, baseY);
         [self addChild:n z:30];
         [_coins addObject:n];
     }
