@@ -43,6 +43,10 @@ settings:
       - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Platforms"
       - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Platforms/iOS"
       - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Support"
+      # CCResponderManager.m 无条件 #import "CCDirectorMac.h"（引擎的 bug），
+      # 所以 Mac 头文件目录必须在搜索路径里；这些头内部有 __CC_PLATFORM_MAC 守卫，
+      # 不会真的参与 iOS 编译。
+      - "$(SRCROOT)/vendor/cocos2d-objc/cocos2d/Platforms/Mac"
       - "$(SRCROOT)/vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive"
       - "$(SRCROOT)/vendor/cocos2d-objc/external/SSZipArchive/SSZipArchive/minizip"
 
