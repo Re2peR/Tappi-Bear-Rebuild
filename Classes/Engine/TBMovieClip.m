@@ -4,6 +4,7 @@
 
 #import "TBMovieClip.h"
 #import "TBAnimData.h"
+#import "TBCompat.h"
 
 @implementation TBMovieClip {
     NSMutableArray<CCSprite *> *_sprites;
